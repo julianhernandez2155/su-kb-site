@@ -1,42 +1,43 @@
 # Project Status — su-kb-site
 
-_Last updated: 2026-05-28_
+_Last updated: 2026-05-28 (evening — third session)_
 
 ## Current focus
 
 **Scope:** building a public GitHub Pages knowledge base that replaces Confluence for SU's ITS Data & AI department. Two consumers — humans browsing (clementine.syr.edu styling) and Claude's `WebFetch` via an org-wide Claude skill. Multi-department-ready from day 1; AI department is the seed.
 
-**State (2026-05-28):** Stage 1 — initial scaffold. Folder tree created; root `CLAUDE.md`/`README.md`/`.gitignore`/`.env.example` written; per-workspace `CONTEXT.md` stubs in place. GitHub repo creation + Quartz spike next.
+**State (2026-05-28, evening):** Stages 1 + 2 complete; Quartz spike works. **Architecture pivoted: ADR-0001 superseded by [ADR-0002](decisions/0002-pivot-from-quartz-to-thin-renderer.md)** — empirical wikilink-through-WebFetch test killed Quartz's load-bearing justification; AI council R2 converged on a thin Python renderer + Jinja2 templates of `_design/` (~150-line target, hard ceiling 300, escape hatch to MkDocs-Material).
 
-**Next:** Stage 2 — Quartz spike inside `_spike/` to verify clementine styling integrates cleanly. If it fights for >2 days, fall back to MkDocs-Material (decision gate documented in [ADR-0001](decisions/0001-quartz-v4-as-ssg.md)).
+**Next:** execute [`docs/next-session-plan.md`](next-session-plan.md) in a fresh session — 9 stages, 12–15 hours of work, two explicit decision gates. Stage 1 is the export-tool salvage (COPY from `su-kb-pipeline` into `su-kb-site/export-tool/`; do NOT modify the prior project's files).
 
 ## What's working
 
 - Folder tree per the approved plan ([C:\Users\julia\.claude\plans\fully-plan-plan-out-tranquil-sunbeam.md](file:///C:/Users/julia/.claude/plans/fully-plan-plan-out-tranquil-sunbeam.md))
 - Root orientation files (`CLAUDE.md` with routing table, `README.md` with setup, `.gitignore`, `.env.example`)
 - Per-workspace `CONTEXT.md` stubs in `export-tool/`, `site/`, `skill/`
+- **Live GitHub Pages site at <https://julianhernandez2155.github.io/su-kb-site/>** — Quartz v4 build, clementine-derived styling (SU navy/orange tokens, Sherman Sans local fonts), 3 seed pages rendering
+- GitHub Actions workflow at `.github/workflows/deploy.yaml` — auto-deploys on push to `main`
+- `_design/` HTML/CSS templates with Codex review signoff (4 AA-contrast blockers documented for Stage 2 of next-session-plan)
+- `_test-wikilinks/` empirical test fixtures (committed at `99e6d70`) — confirmed wikilinks survive WebFetch intact
 
 ## What's next
 
-In order:
+See [`docs/next-session-plan.md`](next-session-plan.md) for the full 9-stage breakdown. Headline order:
 
-1. **Initialize git + create GitHub repo** (`julianhernandez2155/su-kb-site`, private initially)
-2. **Stage 2 — Quartz spike**: `npx quartz create` in `_spike/`, drop Codex's clementine assets into `_spike/quartz/styles` + `_spike/quartz/static`, adapt layouts to the clementine class names, render 3 hand-written seed pages
-3. **Stage 3 — promote spike to `site/`** once styling fit is confirmed; delete `_spike/`
-4. **Stage 4 — salvage and adapt the export-tool** from `../su-kb-pipeline/src/sukb/ingest/`
-5. **Stage 5 — run export against ITSAI** with wrapper-collapse config
-6. **Stage 6 — add `.md` mirror + `llms.txt` emitter plugins**
-7. **Stage 7 — write the Claude skill**
-8. **Stage 8 — empirical wikilink-through-WebFetch test** (cheap; high-information)
-
-Full breakdown in the approved plan file.
+1. **Stage 1 — Salvage export-tool by COPYING from su-kb-pipeline** (~3 hrs; constraint: do NOT modify source project)
+2. **Stage 2 — Fix `_design/` AA-contrast blockers** (~3 hrs)
+3. **Stage 3 — Schema patch + first export against ITSAI** (~3 hrs)
+4. **Stage 4 — `build-one.py` proof-of-concept** (~3 hrs; decision gate at ≤200 lines)
+5. **Stages 5–8 — Full renderer + deploy + cleanup** (~6 hrs)
+6. **Stage 9 — Aaron's research memo** (~3 hrs; the actual internship deliverable per `SU_AI_Intern/CLAUDE.md`)
 
 ## Active decisions
 
-- [ADR-0001](decisions/0001-quartz-v4-as-ssg.md) — Pin Quartz v4 as the SSG; v5 plugin ecosystem too immature for a 6-week MVP
+- [ADR-0002](decisions/0002-pivot-from-quartz-to-thin-renderer.md) — Pivot from Quartz to a thin Python renderer (supersedes [ADR-0001](decisions/0001-quartz-v4-as-ssg.md))
 
 ## Recent pivots
 
+- (2026-05-28 evening) [ADR-0002](decisions/0002-pivot-from-quartz-to-thin-renderer.md) supersedes [ADR-0001](decisions/0001-quartz-v4-as-ssg.md). Trigger: empirical wikilink-through-WebFetch test confirmed wikilinks survive WebFetch intact; AI council R2 converged on thin Python renderer over Quartz.
 - (2026-05-28) Architecture pivot from prior `su-kb-pipeline` (FastMCP + FTS5 + RAG) to static GH Pages + Claude skill + WebFetch — driven by Aaron's 2026-05-20 direction. ~30–40% of the prior code (the Confluence-export half) salvages; everything chat/web/access is cut.
 
 ## Out of scope (for this prototype)
@@ -45,11 +46,10 @@ Full breakdown in the approved plan file.
 - Per-user RBAC / authentication (everything is public on GH Pages)
 - Other departments beyond AI (structure supports them; content awaits)
 - The eventual three-repo split (one repo for prototype)
-- Codex's accessibility audit + link-checking CI (deferred to v1.1)
-- The "Copy as markdown" per-page button (v2)
+- Modifications to the prior `su-kb-pipeline` project (frozen artifact — salvage by COPYING only)
 
 ## Open questions
 
-- **Will Quartz's component model accept clementine styling cleanly?** Answer comes from Stage 2 spike; 2-day budget before fallback to MkDocs-Material
-- **Does Claude `WebFetch` resolve `[[page-id - title]]` wikilinks semantically, or do we need the `.md` mirror with rewritten relative links?** Answer comes from Stage 8 empirical test
-- **What name does Aaron's team pick for the production repo?** Working name is `su-kb-site`; renames are cheap before public launch
+- **Will the thin renderer stay under 300 lines?** Stage 4 decision gate. If no, take ADR-0002's escape hatch to MkDocs-Material (inherited from ADR-0001).
+- **Has Aaron seen the live site and asked for more, or is the research memo (Stage 9) the actual deliverable?** Worth a 1:1 conversation before Stage 9 lands.
+- **What name does Aaron's team pick for the production repo?** Working name is `su-kb-site`; renames are cheap before public launch.

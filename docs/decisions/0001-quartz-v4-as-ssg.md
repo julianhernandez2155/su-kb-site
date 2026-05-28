@@ -1,6 +1,6 @@
 ---
 title: Pin Quartz v4 as the static site generator
-status: accepted
+status: superseded by [0002-pivot-from-quartz-to-thin-renderer.md](0002-pivot-from-quartz-to-thin-renderer.md)
 date: 2026-05-28
 deciders: Julian Hernandez
 consulted: deep-research report (2026-05-28); CC Knowledge Base patterns
