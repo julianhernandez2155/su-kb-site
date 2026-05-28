@@ -1,7 +1,7 @@
 name: Deploy site to GitHub Pages
 
-# Stage 2: builds from _spike/. When the spike is promoted to site/ in Stage 3,
-# update the `working-directory` and `path` references below.
+# Builds the public KB with the thin Python renderer (ADR-0002) and deploys
+# site/_site to GitHub Pages. Renderer: tools/render.py reads site/content/.
 
 on:
   push:
@@ -22,26 +22,22 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
         with:
-          fetch-depth: 0
+          python-version: "3.12"
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
+      - name: Install renderer dependencies
+        run: pip install markdown-it-py mdit-py-plugins pygments jinja2 pyyaml
 
-      - name: Install dependencies
-        working-directory: ./_spike
-        run: npm ci
-
-      - name: Build Quartz site
-        working-directory: ./_spike
-        run: npx quartz build
+      - name: Render site
+        run: python tools/render.py
 
       - uses: actions/configure-pages@v4
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: _spike/public
+          path: site/_site
 
   deploy:
     needs: build
