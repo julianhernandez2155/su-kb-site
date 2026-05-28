@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SU ITS Data &amp; AI · Knowledge Base</title>
+    <meta
+      name="description"
+      content="Public knowledge base for Syracuse University's ITS Data & AI department. Policies, setup guides, and example workflows for Claude, Copilot, Gemini, mentorAI, and more." />
+    <link rel="stylesheet" href="./tokens.css" />
+    <link rel="stylesheet" href="./landing.css" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <!-- ── NAV ─────────────────────────────────────────── -->
+    <nav class="site-nav" id="siteNav" aria-label="Primary">
+      <a href="/" class="nav-brand" aria-label="SU ITS Data & AI Knowledge Base home">
+        <img src="./assets/img/syracuse-logo-orange.svg" alt="Syracuse University" />
+        <span class="nav-brand-divider" aria-hidden="true"></span>
+        <span class="nav-brand-label">Data &amp; AI</span>
+      </a>
+      <div class="nav-right">
+        <a href="#tools" class="nav-link">Tools</a>
+        <a href="#trust" class="nav-link">Policies</a>
+        <a
+          href="https://github.com/julianhernandez2155/su-kb-site"
+          class="nav-link nav-link--external"
+          target="_blank"
+          rel="noopener noreferrer"
+          >GitHub ↗</a
+        >
+      </div>
+    </nav>
+
+    <main id="main">
+      <!-- ── HERO ─────────────────────────────────────── -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <span class="eyebrow">Knowledge Base · ITS Data &amp; AI</span>
+          <h1 id="hero-title">
+            Data &amp; <span class="accent">AI</span> at Syracuse
+          </h1>
+          <p class="hero-subhead">
+            Policies, setup guides, and example workflows for every AI tool the university supports.
+          </p>
+          <p class="hero-panel">
+            <strong>One place for the practical questions.</strong> What does Claude retain? Which
+            tools handle FERPA data? How do I install Claude Code on Windows? This is the public
+            knowledge base for Syracuse University's ITS Data &amp; AI team — sourced from our
+            Confluence space, optimized for fast lookups and AI-friendly fetch.
+          </p>
+          <div class="hero-ctas">
+            <a href="#tools" class="btn btn-primary">
+              Browse the AI tools
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </a>
+            <a href="#trust" class="btn btn-secondary">Read the policies</a>
+          </div>
+          <div class="hero-meta" aria-hidden="true">
+            <span class="hero-meta-item">
+              <span class="hero-meta-dot"></span>
+              Auto-synced from Confluence
+            </span>
+            <span class="hero-meta-item">·</span>
+            <span class="hero-meta-item">LLM-friendly via /llms.txt</span>
+            <span class="hero-meta-item">·</span>
+            <span class="hero-meta-item">Last sync: today</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── TOOLS GRID ──────────────────────────────── -->
+      <section class="tools" id="tools" aria-labelledby="tools-heading">
+        <div class="tools-inner">
+          <header class="tools-header">
+            <span class="eyebrow">Supported tools</span>
+            <h2 id="tools-heading">Every AI tool ITS supports, in one place</h2>
+            <p>
+              Each card links into the canonical policy + setup pages. Mirrors the Confluence
+              hierarchy faithfully &mdash; only the wrappers were collapsed for cleaner URLs.
+            </p>
+          </header>
+
+          <div class="tools-grid" role="list">
+            <!-- Claude — featured -->
+            <a href="./claude/" class="tool-card tool-card--featured" role="listitem">
+              <div class="tool-card-header">
+                <div class="tool-card-icon" aria-hidden="true">C</div>
+                <h3 class="tool-card-title">
+                  Claude
+                  <span class="badge badge--solid">Premium</span>
+                </h3>
+              </div>
+              <p class="tool-card-desc">
+                Anthropic's Claude — data classification policy, retention &amp; training opt-out,
+                premium seats, Claude Code setup, M365 connector, MCP and Cowork posture at SU.
+              </p>
+              <div class="tool-card-footer">
+                <div class="tool-card-meta">
+                  <span class="badge badge--accent">10 pages</span>
+                  <span class="badge">FAQ · Setup · Policy</span>
+                </div>
+                <span class="tool-card-cta">
+                  Open
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </span>
+              </div>
+            </a>
+
+            <!-- Copilot -->
+            <a href="./copilot/" class="tool-card" role="listitem">
+              <div class="tool-card-header">
+                <div class="tool-card-icon" aria-hidden="true">M</div>
+                <h3 class="tool-card-title">Microsoft Copilot</h3>
+              </div>
+              <p class="tool-card-desc">
+                Copilot policy for university data — retention, training opt-out, M365 integration,
+                and the &ldquo;protected&rdquo; vs commercial Copilot distinction at SU.
+              </p>
+              <div class="tool-card-footer">
+                <div class="tool-card-meta">
+                  <span class="badge badge--accent">1 page</span>
+                  <span class="badge">FAQ</span>
+                </div>
+                <span class="tool-card-cta">
+                  Open
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </span>
+              </div>
+            </a>
+
+            <!-- Gemini -->
+            <a href="./gemini/" class="tool-card" role="listitem">
+              <div class="tool-card-header">
+                <div class="tool-card-icon" aria-hidden="true">G</div>
+                <h3 class="tool-card-title">Google Gemini</h3>
+              </div>
+              <p class="tool-card-desc">
+                Gemini at SU — `@g.syr.edu` login, training and retention posture, Drive access
+                rules, plus the NotebookLM and Smart Study Companion workflows.
+              </p>
+              <div class="tool-card-footer">
+                <div class="tool-card-meta">
+                  <span class="badge badge--accent">4 pages</span>
+                  <span class="badge">FAQ · Workflows</span>
+                </div>
+                <span class="tool-card-cta">
+                  Open
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </span>
+              </div>
+            </a>
+
+            <!-- mentorAI / Clementine -->
+            <a href="./clementine-platform/" class="tool-card" role="listitem">
+              <div class="tool-card-header">
+                <div class="tool-card-icon" aria-hidden="true">m</div>
+                <h3 class="tool-card-title">
+                  mentorAI
+                  <span class="badge">Clementine</span>
+                </h3>
+              </div>
+              <p class="tool-card-desc">
+                Syracuse's own private AI platform for course-specific mentors. Build a mentor,
+                configure tools, choose an LLM, use the API, deploy via Clementine Class Search.
+              </p>
+              <div class="tool-card-footer">
+                <div class="tool-card-meta">
+                  <span class="badge badge--accent">6 pages</span>
+                  <span class="badge">Setup · API</span>
+                </div>
+                <span class="tool-card-cta">
+                  Open
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </span>
+              </div>
+            </a>
+
+            <!-- General / Policy -->
+            <a href="./general/" class="tool-card" role="listitem">
+              <div class="tool-card-header">
+                <div class="tool-card-icon" aria-hidden="true">★</div>
+                <h3 class="tool-card-title">Approved Tools</h3>
+              </div>
+              <p class="tool-card-desc">
+                The canonical list — which AI tools are approved for which data classifications.
+                Plus cross-platform comparisons and the Creative AI Workflows guide.
+              </p>
+              <div class="tool-card-footer">
+                <div class="tool-card-meta">
+                  <span class="badge badge--accent">2 pages</span>
+                  <span class="badge">Policy · Compare</span>
+                </div>
+                <span class="tool-card-cta">
+                  Open
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </span>
+              </div>
+            </a>
+
+            <!-- Synthesis / Guides -->
+            <a href="./guides/" class="tool-card" role="listitem">
+              <div class="tool-card-header">
+                <div class="tool-card-icon" aria-hidden="true">§</div>
+                <h3 class="tool-card-title">Cross-cutting guides</h3>
+              </div>
+              <p class="tool-card-desc">
+                Reviewed synthesis pages that stitch across multiple tools — &ldquo;What's enabled
+                vs disabled at SU?&rdquo;, &ldquo;Which tool for which data?&rdquo; Cited back to
+                source.
+              </p>
+              <div class="tool-card-footer">
+                <div class="tool-card-meta">
+                  <span class="badge badge--accent">2 hubs</span>
+                  <span class="badge">Synthesis</span>
+                </div>
+                <span class="tool-card-cta">
+                  Open
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── TRUST / RESOURCES BANNER ─────────────────── -->
+      <section class="trust-banner" id="trust" aria-labelledby="trust-h1 trust-h2">
+        <div class="trust-inner">
+          <div class="trust-block">
+            <span class="eyebrow">Authoritative source</span>
+            <h2 id="trust-h1">
+              Confluence is the <span class="accent">source of truth</span>
+            </h2>
+            <p>
+              Every page on this site is mirrored from Syracuse's Confluence space (ITSAI), with
+              the page-ID preserved in the frontmatter for traceability. When something is wrong
+              here, the fix happens upstream — and flows down on the next sync.
+            </p>
+            <a
+              href="https://answers.atlassian.syr.edu/wiki/spaces/ITSAI"
+              class="btn btn-ghost external-link"
+              target="_blank"
+              rel="noopener noreferrer">
+              View source in Confluence
+            </a>
+          </div>
+          <div class="trust-block">
+            <span class="eyebrow">For Claude users</span>
+            <h2 id="trust-h2">
+              Ask Claude. <span class="accent">Get the right page.</span>
+            </h2>
+            <p>
+              An org-wide Claude skill routes Claude's WebFetch tool here when you ask SU AI
+              questions. The site exposes a curated <code>/llms.txt</code> and clean
+              <code>.md</code> versions of every page so the fetch is efficient.
+            </p>
+            <a
+              href="https://github.com/julianhernandez2155/su-kb-site"
+              class="btn btn-ghost external-link"
+              target="_blank"
+              rel="noopener noreferrer">
+              Install the skill
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ── FOOTER ──────────────────────────────────────── -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="./assets/img/syracuse-logo-orange.svg" alt="Syracuse University" />
+          <p>
+            Public knowledge base for the ITS Data &amp; AI department at Syracuse University.
+            Built on Quartz; sourced from Confluence; optimized for human readers and Claude
+            WebFetch.
+          </p>
+        </div>
+        <div>
+          <h3 class="footer-heading">Knowledge Base</h3>
+          <ul class="footer-links">
+            <li><a href="#tools">All tools</a></li>
+            <li><a href="./guides/">Cross-cutting guides</a></li>
+            <li><a href="./general/">Approved tools list</a></li>
+            <li><a href="./llms.txt">/llms.txt</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-heading">Resources</h3>
+          <ul class="footer-links">
+            <li>
+              <a
+                href="https://www.syracuse.edu"
+                class="external-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Syracuse University</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://its.syr.edu"
+                class="external-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Information Technology Services</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://answers.atlassian.syr.edu/wiki/spaces/ITSAI"
+                class="external-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Confluence (source)</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://github.com/julianhernandez2155/su-kb-site"
+                class="external-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                >GitHub repository</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span
+          >&copy; <span id="footYear">2026</span> Syracuse University · ITS Data &amp; AI</span
+        >
+        <span class="footer-disclaimer"
+          >This site is independent of the official Clementine product, despite shared visual
+          language.</span
+        >
+      </div>
+    </footer>
+
+    <!-- ── Nav scroll-state ─────────────────────────────── -->
+    <script>
+      (function () {
+        var nav = document.getElementById("siteNav");
+        var setState = function () {
+          if (window.scrollY > 32) nav.classList.add("scrolled");
+          else nav.classList.remove("scrolled");
+        };
+        setState();
+        window.addEventListener("scroll", setState, { passive: true });
+        document.getElementById("footYear").textContent = new Date().getFullYear();
+      })();
+    </script>
+  </body>
+</html>

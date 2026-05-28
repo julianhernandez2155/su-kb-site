@@ -1,0 +1,606 @@
+{
+  "fontInfo": {
+    "bodyFont": "\"Sherman Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Verdana, sans-serif",
+    "checkSherman": true,
+    "fonts": [],
+    "motionReduce": false,
+    "viewport": {
+      "devicePixelRatio": 1.3499999046325684,
+      "innerHeight": 1028,
+      "innerWidth": 1475
+    }
+  },
+  "fontAssets": [
+    {
+      "id": "bce91d17eea38846",
+      "kind": "font",
+      "name": "shermansans-bold.woff2",
+      "sources": [
+        {
+          "kind": "resource",
+          "property": "css"
+        }
+      ],
+      "url": "http://127.0.0.1:8801/assets/fonts/shermansans-bold.woff2"
+    },
+    {
+      "id": "c610bd4f054dcaba",
+      "kind": "font",
+      "name": "shermansans-book.woff2",
+      "sources": [
+        {
+          "kind": "resource",
+          "property": "css"
+        }
+      ],
+      "url": "http://127.0.0.1:8801/assets/fonts/shermansans-book.woff2"
+    },
+    {
+      "id": "4b7561ff8a45943b",
+      "kind": "font",
+      "name": "shermansans-bookitalic.woff2",
+      "sources": [
+        {
+          "kind": "resource",
+          "property": "css"
+        }
+      ],
+      "url": "http://127.0.0.1:8801/assets/fonts/shermansans-bookitalic.woff2"
+    }
+  ],
+  "landingLogs": [],
+  "landingFocus": [
+    {
+      "cls": "skip-link",
+      "href": "#main",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Skip to main content"
+    },
+    {
+      "cls": "nav-brand",
+      "href": "/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Data & AI"
+    },
+    {
+      "cls": "nav-link",
+      "href": "#tools",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Tools"
+    },
+    {
+      "cls": "nav-link",
+      "href": "#trust",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Policies"
+    },
+    {
+      "cls": "nav-link",
+      "href": "https://github.com/julianhernandez2155/su-kb-site",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "GitHub ↗"
+    },
+    {
+      "cls": "btn btn-primary",
+      "href": "#tools",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Browse the AI tools"
+    },
+    {
+      "cls": "btn btn-secondary",
+      "href": "#trust",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Read the policies"
+    },
+    {
+      "cls": "tool-card tool-card--featured",
+      "href": "./claude/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "C Claude PREMIUM Anthropic's Claude — data classification policy, retention & tr"
+    },
+    {
+      "cls": "tool-card",
+      "href": "./copilot/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "M Microsoft Copilot Copilot policy for university data — retention, training opt"
+    },
+    {
+      "cls": "tool-card",
+      "href": "./gemini/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "G Google Gemini Gemini at SU — `@g.syr.edu` login, training and retention postur"
+    },
+    {
+      "cls": "tool-card",
+      "href": "./clementine-platform/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "m mentorAI CLEMENTINE Syracuse's own private AI platform for course-specific men"
+    },
+    {
+      "cls": "tool-card",
+      "href": "./general/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "★ Approved Tools The canonical list — which AI tools are approved for which data"
+    },
+    {
+      "cls": "tool-card",
+      "href": "./guides/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "§ Cross-cutting guides Reviewed synthesis pages that stitch across multiple tool"
+    },
+    {
+      "cls": "btn btn-ghost",
+      "href": "https://answers.atlassian.syr.edu/wiki/spaces/ITSAI",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "View source in Confluence ↗"
+    },
+    {
+      "cls": "btn btn-ghost",
+      "href": "https://github.com/julianhernandez2155/su-kb-site",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Install the skill ↗"
+    },
+    {
+      "cls": "",
+      "href": "#tools",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "All tools"
+    }
+  ],
+  "hoverHeroBtn": {
+    "name": "landing-hover-primary-button.png",
+    "selector": ".hero-ctas .btn-primary",
+    "rect": {
+      "cx": 623.9236297607422,
+      "cy": 734.1209716796875,
+      "height": 57.2916259765625,
+      "width": 240.39352416992188,
+      "x": 503.7268676757813,
+      "y": 705.4751586914062
+    },
+    "styles": {
+      "background": "rgb(215, 65, 0)",
+      "beforeOpacity": "1",
+      "beforeTransform": "none",
+      "borderColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "rgba(247, 105, 0, 0.45) 0px 6px 28px 0px",
+      "color": "rgb(255, 255, 255)",
+      "transform": "matrix(1, 0, 0, 1, 0, -2)"
+    },
+    "file": "C:\\Users\\julia\\OneDrive - Syracuse University\\Desktop\\Workspace\\SU_AI_Intern\\prototypes\\su-kb-site\\_design\\screenshots\\codex-review-2026-05-28\\landing-hover-primary-button.png"
+  },
+  "hoverCard": {
+    "name": "landing-hover-featured-card.png",
+    "selector": ".tool-card--featured",
+    "rect": {
+      "cx": 354.21876525878906,
+      "cy": 522.442138671875,
+      "height": 351.3194580078125,
+      "width": 350.65972900390625,
+      "x": 178.88890075683594,
+      "y": 346.78240966796875
+    },
+    "styles": {
+      "background": "rgba(0, 0, 0, 0)",
+      "beforeOpacity": "1",
+      "beforeTransform": "matrix(1, 0, 0, 1, 0, 0)",
+      "borderColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "rgba(247, 105, 0, 0.18) 0px 12px 40px 0px, rgba(0, 14, 84, 0.08) 0px 4px 16px 0px",
+      "color": "rgb(26, 26, 26)",
+      "transform": "matrix(1, 0, 0, 1, 0, -6)"
+    },
+    "file": "C:\\Users\\julia\\OneDrive - Syracuse University\\Desktop\\Workspace\\SU_AI_Intern\\prototypes\\su-kb-site\\_design\\screenshots\\codex-review-2026-05-28\\landing-hover-featured-card.png"
+  },
+  "docLogsLoad": [],
+  "tocStates": [
+    {
+      "active": [],
+      "hash": "#data-classification"
+    },
+    {
+      "active": [
+        "#premium"
+      ],
+      "hash": "#retention"
+    },
+    {
+      "active": [
+        "#setup"
+      ],
+      "hash": "#premium"
+    },
+    {
+      "active": [
+        "#setup"
+      ],
+      "hash": "#setup"
+    },
+    {
+      "active": [
+        "#setup"
+      ],
+      "hash": "#related"
+    }
+  ],
+  "docFocus": [
+    {
+      "cls": "skip-link",
+      "href": "#article",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Skip to main content"
+    },
+    {
+      "cls": "nav-brand",
+      "href": "/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Data & AI"
+    },
+    {
+      "cls": "nav-link",
+      "href": "/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Tools"
+    },
+    {
+      "cls": "nav-link",
+      "href": "/guides/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Guides"
+    },
+    {
+      "cls": "nav-link",
+      "href": "https://github.com/julianhernandez2155/su-kb-site",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "GitHub ↗"
+    },
+    {
+      "cls": "",
+      "href": "./claude-faq.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Claude FAQ"
+    },
+    {
+      "cls": "",
+      "href": "./claude-enterprise.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Claude Enterprise at SU"
+    },
+    {
+      "cls": "",
+      "href": "./understanding-claude-products.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Understanding Claude Products"
+    },
+    {
+      "cls": "",
+      "href": "./purchase-claude-code.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Purchase Claude Code & API"
+    },
+    {
+      "cls": "",
+      "href": "./claude-code-setup.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Claude Code Setup"
+    },
+    {
+      "cls": "",
+      "href": "./connect-claude-m365.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Connect Claude to M365"
+    },
+    {
+      "cls": "",
+      "href": "./claude-cowork.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Claude Cowork (disabled)"
+    },
+    {
+      "cls": "",
+      "href": "./claude-local-mcp.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Claude Local MCP"
+    },
+    {
+      "cls": "",
+      "href": "./requesting-connector.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Requesting a Connector"
+    },
+    {
+      "cls": "",
+      "href": "./sharepoint-in-claude.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "SharePoint in Claude"
+    },
+    {
+      "cls": "",
+      "href": "./example-uses/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Example Uses"
+    },
+    {
+      "cls": "",
+      "href": "./example-uses/meeting-summaries.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Meeting Summaries"
+    },
+    {
+      "cls": "",
+      "href": "./example-uses/career-project.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Career Project"
+    },
+    {
+      "cls": "",
+      "href": "./example-uses/study-project.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Study Project"
+    },
+    {
+      "cls": "",
+      "href": "./example-uses/drafting-emails.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Drafting Emails"
+    },
+    {
+      "cls": "",
+      "href": "./example-uses/research-assistant.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Research Assistant"
+    },
+    {
+      "cls": "",
+      "href": "../copilot/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Microsoft Copilot"
+    },
+    {
+      "cls": "",
+      "href": "../gemini/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Google Gemini"
+    },
+    {
+      "cls": "",
+      "href": "../clementine-platform/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "mentorAI / Clementine"
+    },
+    {
+      "cls": "",
+      "href": "../general/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Approved Tools"
+    },
+    {
+      "cls": "",
+      "href": "../guides/approved-tools-comparison.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Tools by data class"
+    },
+    {
+      "cls": "",
+      "href": "../guides/claude-surface-map.html",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Claude surface map"
+    },
+    {
+      "cls": "",
+      "href": "/",
+      "outline": "rgb(247, 105, 0) solid 2.96296px",
+      "outlineOffset": "1.48148px",
+      "tag": "A",
+      "text": "Home"
+    }
+  ],
+  "hoverSidebar": {
+    "name": "docpage-hover-sidebar.png",
+    "selector": ".sidebar-list a[href=\"./claude-enterprise.html\"]",
+    "rect": {
+      "cx": 146.95602416992188,
+      "cy": 204.8263931274414,
+      "height": 34.97685241699219,
+      "width": 212.1527862548828,
+      "x": 40.87963104248047,
+      "y": 187.3379669189453
+    },
+    "styles": {
+      "background": "rgb(230, 231, 238)",
+      "beforeOpacity": "1",
+      "beforeTransform": "none",
+      "borderColor": "rgb(0, 14, 84) rgb(0, 14, 84) rgb(0, 14, 84) rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "color": "rgb(0, 14, 84)",
+      "transform": "none"
+    },
+    "file": "C:\\Users\\julia\\OneDrive - Syracuse University\\Desktop\\Workspace\\SU_AI_Intern\\prototypes\\su-kb-site\\_design\\screenshots\\codex-review-2026-05-28\\docpage-hover-sidebar.png"
+  },
+  "hoverToc": {
+    "name": "docpage-hover-toc.png",
+    "selector": ".toc-list a[href=\"#retention\"]",
+    "rect": {
+      "cx": 1329.5196990966797,
+      "cy": 188.99306106567383,
+      "height": 30.27777862548828,
+      "width": 191.77084350585935,
+      "x": 1233.63427734375,
+      "y": 173.8541717529297
+    },
+    "styles": {
+      "background": "rgba(0, 0, 0, 0)",
+      "beforeOpacity": "1",
+      "beforeTransform": "none",
+      "borderColor": "rgb(215, 65, 0) rgb(215, 65, 0) rgb(215, 65, 0) rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "color": "rgb(215, 65, 0)",
+      "transform": "none"
+    },
+    "file": "C:\\Users\\julia\\OneDrive - Syracuse University\\Desktop\\Workspace\\SU_AI_Intern\\prototypes\\su-kb-site\\_design\\screenshots\\codex-review-2026-05-28\\docpage-hover-toc.png"
+  },
+  "hoverH2": {
+    "name": "docpage-hover-h2.png",
+    "selector": "#data-classification",
+    "rect": {
+      "cx": 757.4016723632812,
+      "cy": 663.3044109344482,
+      "height": 33.784725189208984,
+      "width": 683.9931030273438,
+      "x": 415.4051208496094,
+      "y": 646.4120483398438
+    },
+    "styles": {
+      "background": "rgba(0, 0, 0, 0)",
+      "beforeOpacity": "1",
+      "beforeTransform": "matrix(1, 0, 0, 1, 0, 0)",
+      "borderColor": "rgb(0, 14, 84)",
+      "boxShadow": "none",
+      "color": "rgb(0, 14, 84)",
+      "transform": "none"
+    },
+    "file": "C:\\Users\\julia\\OneDrive - Syracuse University\\Desktop\\Workspace\\SU_AI_Intern\\prototypes\\su-kb-site\\_design\\screenshots\\codex-review-2026-05-28\\docpage-hover-h2.png"
+  },
+  "copyResult": {
+    "className": "action-btn action-btn--accent is-copied",
+    "label": "Copied (plain text)"
+  },
+  "docLogsAfterCopy": [
+    {
+      "level": "warn",
+      "message": "[copy-markdown] .md fetch failed, falling back to article text: Error: HTTP 404\n    at http://127.0.0.1:8801/copy-markdown.js:88:28",
+      "timestamp": "2026-05-28T15:46:40.881Z",
+      "url": "http://127.0.0.1:8801/copy-markdown.js"
+    }
+  ],
+  "sticky": {
+    "scrollY": 1100.0001220703125,
+    "sidebarHeight": 964.1435546875,
+    "sidebarTop": 63.99305725097656,
+    "tocHeight": 265.9490966796875,
+    "tocTop": 63.99305725097656
+  },
+  "externalIndicators": [
+    {
+      "after": "none",
+      "inArticle": false,
+      "inFooter": false,
+      "text": "GitHub ↗"
+    },
+    {
+      "after": "none",
+      "inArticle": false,
+      "inFooter": false,
+      "text": "Edit on Confluence"
+    },
+    {
+      "after": "none",
+      "inArticle": false,
+      "inFooter": true,
+      "text": "Syracuse University"
+    },
+    {
+      "after": "none",
+      "inArticle": false,
+      "inFooter": true,
+      "text": "Information Technology Services"
+    },
+    {
+      "after": "none",
+      "inArticle": false,
+      "inFooter": true,
+      "text": "Confluence (source)"
+    },
+    {
+      "after": "none",
+      "inArticle": false,
+      "inFooter": true,
+      "text": "GitHub repository"
+    }
+  ]
+}

@@ -1,0 +1,474 @@
+/* ============================================================
+   SU ITS Data & AI — Landing Page Styles
+   ============================================================
+   Used for: site root (/) and department landings (/data-ai/).
+   Section order: nav, hero, tool cards, trust banner, footer.
+   ============================================================ */
+
+/* ── Hero ──────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: calc(var(--nav-height) + var(--space-9)) var(--space-7) var(--space-9);
+  color: var(--su-white);
+}
+
+/* Layered background: textured image + navy gradient overlay */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("./assets/img/background.png") center/cover no-repeat;
+  z-index: 0;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at top right, rgba(247, 105, 0, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at bottom left, rgba(43, 114, 215, 0.25) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(0, 14, 84, 0.55) 0%, rgba(0, 14, 84, 0.85) 100%);
+  z-index: 1;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 880px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+}
+
+.hero .eyebrow {
+  color: var(--su-orange-light);
+  margin-bottom: var(--space-5);
+  justify-content: center;
+}
+
+.hero .eyebrow::before {
+  background: var(--su-orange);
+}
+
+.hero h1 {
+  font-size: var(--fs-display);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  margin-bottom: var(--space-4);
+  color: var(--su-white);
+}
+
+.hero h1 .accent {
+  background: linear-gradient(90deg, var(--su-orange-light) 0%, var(--su-orange) 60%, var(--su-orange-medium) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.hero-subhead {
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+  font-weight: 400;
+  line-height: var(--lh-snug);
+  color: rgba(255, 255, 255, 0.92);
+  margin-bottom: var(--space-6);
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-panel {
+  background: rgba(0, 14, 84, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-md);
+  max-width: 680px;
+  margin: 0 auto var(--space-7);
+  font-size: var(--fs-body);
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.hero-panel strong {
+  color: var(--su-orange-light);
+  font-weight: 700;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-meta {
+  margin-top: var(--space-7);
+  display: flex;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: var(--fs-small);
+}
+
+.hero-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.hero-meta-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--su-orange);
+  box-shadow: 0 0 12px var(--su-orange);
+  animation: heroDotPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes heroDotPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Page-load reveal (staggered) */
+.hero-inner > * {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: heroReveal 0.7s var(--ease-out) forwards;
+}
+
+.hero-inner > *:nth-child(1) { animation-delay: 0.05s; }
+.hero-inner > *:nth-child(2) { animation-delay: 0.12s; }
+.hero-inner > *:nth-child(3) { animation-delay: 0.2s; }
+.hero-inner > *:nth-child(4) { animation-delay: 0.28s; }
+.hero-inner > *:nth-child(5) { animation-delay: 0.36s; }
+.hero-inner > *:nth-child(6) { animation-delay: 0.44s; }
+
+@keyframes heroReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: calc(var(--nav-height) + var(--space-7)) var(--space-5) var(--space-7);
+    min-height: auto;
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-ctas .btn {
+    justify-content: center;
+  }
+}
+
+/* ── Tool Cards ────────────────────────────────────────── */
+
+.tools {
+  padding: var(--space-9) var(--space-7);
+  background: linear-gradient(180deg, var(--su-white) 0%, var(--su-pale-gray) 100%);
+}
+
+.tools-inner {
+  max-width: var(--container-reading);
+  margin: 0 auto;
+}
+
+.tools-header {
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+
+.tools-header .eyebrow {
+  justify-content: center;
+  margin-bottom: var(--space-4);
+}
+
+.tools-header h2 {
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  color: var(--su-blue);
+  letter-spacing: var(--tracking-tight);
+  margin-bottom: var(--space-3);
+  line-height: var(--lh-snug);
+}
+
+.tools-header p {
+  font-size: var(--fs-lead);
+  color: var(--color-text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: var(--lh-normal);
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+
+@media (max-width: 980px) {
+  .tools-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tool-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-6);
+  background: var(--su-white);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out);
+  overflow: hidden;
+}
+
+.tool-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--su-orange);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.tool-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(247, 105, 0, 0.25);
+  box-shadow: var(--shadow-lg);
+  text-decoration: none;
+  color: inherit;
+}
+
+.tool-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Featured card — gradient border (clementine pattern) */
+.tool-card--featured {
+  border: 2.5px solid transparent;
+  background:
+    linear-gradient(var(--su-white), var(--su-white)) padding-box,
+    var(--grad-card-border) border-box;
+  box-shadow: 0 4px 24px rgba(247, 105, 0, 0.12), var(--shadow-md);
+}
+
+.tool-card--featured:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-accent);
+  border-color: transparent;
+}
+
+.tool-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.tool-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--su-pale-gray);
+  color: var(--su-blue);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  border: 1px solid var(--color-border);
+}
+
+.tool-card--featured .tool-card-icon {
+  background: var(--grad-orange);
+  color: var(--su-white);
+  border-color: transparent;
+  box-shadow: var(--shadow-glow-orange);
+}
+
+.tool-card-title {
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  color: var(--su-blue);
+  line-height: var(--lh-snug);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.tool-card-desc {
+  font-size: 0.9375rem;
+  line-height: var(--lh-normal);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-5);
+  flex: 1;
+}
+
+.tool-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.tool-card-meta {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.tool-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  color: var(--su-orange-dark);
+  text-decoration: none;
+  transition: gap var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.tool-card:hover .tool-card-cta {
+  gap: var(--space-3);
+  color: var(--su-orange-accessible);
+}
+
+.tool-card-cta svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* ── Trust Banner ──────────────────────────────────────── */
+
+.trust-banner {
+  padding: var(--space-9) var(--space-7);
+  background: var(--su-blue);
+  color: var(--su-white);
+  position: relative;
+  overflow: hidden;
+}
+
+.trust-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 80% 0%, rgba(247, 105, 0, 0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 100%, rgba(43, 114, 215, 0.2) 0%, transparent 55%),
+    var(--grad-blue);
+  z-index: 0;
+}
+
+.trust-inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--container-reading);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.trust-block {
+  padding: 0 var(--space-7);
+}
+
+.trust-block:first-child {
+  padding-left: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.trust-block:last-child {
+  padding-right: 0;
+}
+
+.trust-block .eyebrow {
+  color: var(--su-orange-light);
+  margin-bottom: var(--space-4);
+}
+
+.trust-block .eyebrow::before {
+  background: var(--su-orange);
+}
+
+.trust-block h2 {
+  font-size: clamp(1.375rem, 2vw, 1.875rem);
+  font-weight: 700;
+  color: var(--su-white);
+  line-height: var(--lh-snug);
+  margin-bottom: var(--space-4);
+  letter-spacing: var(--tracking-tight);
+}
+
+.trust-block h2 .accent {
+  color: var(--su-orange);
+}
+
+.trust-block p {
+  font-size: var(--fs-body);
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: var(--space-5);
+  max-width: 460px;
+}
+
+@media (max-width: 768px) {
+  .trust-inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+  }
+
+  .trust-block {
+    padding: 0;
+  }
+
+  .trust-block:first-child {
+    padding-left: 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding-bottom: var(--space-7);
+  }
+}
