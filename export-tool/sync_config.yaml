@@ -1,0 +1,30 @@
+# Department mapping: Confluence space_key → site department slug
+space_departments:
+  ITSAI: data-ai
+
+default_department: uncategorized
+
+# Wrapper-collapse: ancestor titles to skip when computing output paths
+# (per user decision 2026-05-28: collapse the redundant Confluence wrappers).
+# A page at "AI @ Syracuse University > AI > Claude > Claude FAQ" writes to
+# site/content/data-ai/claude/claude-faq.md.
+collapse_ancestors:
+  - "AI @ Syracuse University"
+  - "AI"
+
+# Content-quality exclusion: pages whose title starts with a prefix in
+# `exclude_title_prefixes`, OR whose title/ancestor_path contains a segment in
+# `exclude_segments`, are skipped before writing (they emit a [skipped] event).
+# Mirrors su-kb-pipeline's _TEST_PATH_SEGMENTS — keeps intern scratch + (Test)
+# drafts off the public KB. Repeatable: the next sync re-applies the filter.
+exclude_segments:
+  - "Summer Intern 2026"
+exclude_title_prefixes:
+  - "(Test)"
+
+enabled_keys:
+  - ITSAI
+
+output_dir: ../site/content
+api_base: https://su-jsm.atlassian.net/wiki/api/v2
+rate_limit_per_sec: 5

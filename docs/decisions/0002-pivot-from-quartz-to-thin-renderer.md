@@ -67,3 +67,35 @@ If `tools/render.py` crosses ~300 lines, OR if templating fights for more than 1
 - WebFetch results from `raw.githubusercontent.com/julianhernandez2155/su-kb-site/main/_test-wikilinks/...` (2026-05-28)
 - AI council R1 + R2 outputs (2026-05-28; synthesized in this ADR's Context section)
 - [next-session-plan.md](../next-session-plan.md) — execution plan + decision gates
+
+## Amendment (2026-05-28) — accepted renderer overage
+
+`tools/render.py` grew from **299 → 436 lines** while adding directory-index
+generation (an `index.html` + `.md` mirror for the dept root and every
+subdirectory that holds pages, so landing-card and breadcrumb links resolve
+instead of 404ing). The same change also pulled in adjacent correctness work
+that the original estimate didn't anticipate: a clean-rebuild step (stale
+orphan HTML/.md from renamed or excluded pages must not linger), per-department
+`attachments/` copying, root-absolute sidebar/Related/body-link resolution
+(the wrapper-collapsed nesting broke the old flat relative links), and a
+post-render link-integrity check that now reports **zero** broken internal
+`.html`/image targets under `site/_site`. Pure display data (labels, card copy,
+index intros) lives in `kb_config.py`, keeping `render.py` to logic.
+
+This crosses the **300-line decision gate** from the section above. Reviewed
+with the gate's *purpose* in mind rather than the number: the gate existed to
+catch us building a half-finished SSG. That risk did not materialize. The
+renderer is still a single inspectable file of straight-line logic — markdown →
+HTML, synthesize index bodies, emit mirrors/llms.txt/sitemap, verify links —
+with no plugin system, no config DSL, no routing layer, no incremental-build
+machinery. It reads top-to-bottom in well under the "20 minutes" handoff target
+ADR-0002 set. The escape hatch (fall back to **MkDocs-Material**) was weighed
+and declined: migrating now would be a larger lift than the overage it saves,
+and it would discard the bespoke clementine-styled `_design/` templates that are
+the whole reason this path was chosen over a generic SSG in the first place.
+
+**Decision:** Julian accepts the overage. The 300-line figure is retired as a
+hard gate for this renderer; the operative constraint going forward is
+"single-file, inspectable, no SSG-framework creep," which 436 lines still
+satisfies. If a *future* feature would require a plugin/config/routing
+abstraction (real SSG-shaped complexity), revisit MkDocs-Material then.

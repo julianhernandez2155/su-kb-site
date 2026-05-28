@@ -11,7 +11,10 @@ node_modules/
 .cache/
 dist/
 
-# Quartz build outputs
+# Build outputs (CI rebuilds from source)
+site/_site/
+_design/output/
+# Quartz spike build outputs (legacy)
 site/public/
 _spike/public/
 _spike/node_modules/
@@ -30,3 +33,6 @@ desktop.ini
 .idea/
 *.swp
 *~
+
+# Export-tool build state (local only; CI does not export)
+site/content/**/.meta/

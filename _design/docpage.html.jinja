@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }} · SU ITS Data &amp; AI</title>
+    <meta name="description" content="{{ description }}" />
+    <link rel="canonical" href="{{ canonical_url }}" />
+    <link rel="alternate" type="text/markdown" href="{{ base_url }}/{{ dept }}/{{ rel_md_path }}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="{{ title }}" />
+    <meta property="og:description" content="{{ description }}" />
+    <meta property="og:url" content="{{ canonical_url }}" />
+    <meta property="og:site_name" content="SU ITS Data & AI Knowledge Base" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="stylesheet" href="{{ base_url }}/tokens.css" />
+    <link rel="stylesheet" href="{{ base_url }}/pygments.css" />
+    <link rel="stylesheet" href="{{ base_url }}/docpage.css" />
+  </head>
+  <body>
+    <a href="#article" class="skip-link">Skip to main content</a>
+
+    <nav class="site-nav" id="siteNav" aria-label="Primary">
+      <a href="{{ base_url }}/" class="nav-brand" aria-label="SU ITS Data & AI Knowledge Base home">
+        <img src="{{ base_url }}/assets/img/syracuse-logo-orange.svg" alt="Syracuse University" />
+        <span class="nav-brand-divider" aria-hidden="true"></span>
+        <span class="nav-brand-label">Data &amp; AI</span>
+      </a>
+      <div class="nav-right">
+        <a href="{{ base_url }}/{{ dept }}/" class="nav-link">Tools</a>
+        <a href="{{ base_url }}/{{ dept }}/ai-general-information/" class="nav-link">General info</a>
+        <a
+          href="{{ github_url }}"
+          class="nav-link nav-link--external"
+          target="_blank"
+          rel="noopener noreferrer"
+          >GitHub ↗</a
+        >
+      </div>
+    </nav>
+
+    <div class="doc">
+      <aside class="doc-sidebar" aria-label="Section navigation">
+        <span class="sidebar-eyebrow">{{ department_label }}</span>
+        {{ sidebar | safe }}
+      </aside>
+
+      <article class="doc-article" id="article">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          {% for crumb in breadcrumbs %}
+          {% if not loop.last %}
+          <a href="{{ crumb.href }}">{{ crumb.label }}</a>
+          <span class="breadcrumbs-sep" aria-hidden="true">›</span>
+          {% else %}
+          <span class="breadcrumbs-current" aria-current="page">{{ crumb.label }}</span>
+          {% endif %}
+          {% endfor %}
+        </nav>
+
+        <header class="article-header">
+          <h1>{{ title }}</h1>
+          <p class="article-lede">{{ description }}</p>
+          <div class="article-meta">
+            {% if last_modified %}
+            <span class="article-meta-item">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              Last updated {{ last_modified }}
+            </span>
+            {% endif %}
+            <span class="article-meta-item">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+              </svg>
+              Page&nbsp;<code>{{ page_id }}</code>
+            </span>
+            <span class="article-meta-tags">
+              {% for tag in tags %}<span class="badge">{{ tag }}</span>{% endfor %}
+            </span>
+          </div>
+        </header>
+
+        <details class="mobile-doc-nav">
+          <summary>Browse {{ department_label }} docs</summary>
+          <div class="mobile-doc-nav-panel">{{ sidebar | safe }}</div>
+        </details>
+
+        <div class="article-body">{{ body | safe }}</div>
+
+        <footer class="article-footer">
+          <div class="article-actions">
+            <button type="button" class="action-btn action-btn--accent" data-copy-markdown>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+              <span class="action-btn-label">Copy as markdown</span>
+            </button>
+            <a href="{{ source_url }}" class="action-btn" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+              Edit on Confluence
+            </a>
+            <a href="./{{ slug }}.md" class="action-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+              </svg>
+              View raw .md
+            </a>
+          </div>
+          <div class="article-footer-meta">
+            <span class="article-footer-source">
+              Source: <code>{{ source_path }}</code>
+            </span>
+            <span>Sourced from Confluence. <em>Edit upstream for changes to stick.</em></span>
+          </div>
+        </footer>
+      </article>
+
+      {% if toc %}
+      <aside class="doc-toc" aria-label="On this page">
+        <p class="toc-title">On this page</p>
+        {{ toc | safe }}
+      </aside>
+      {% endif %}
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="{{ base_url }}/assets/img/syracuse-logo-orange.svg" alt="Syracuse University" />
+          <p>
+            Public knowledge base for the ITS Data &amp; AI department at Syracuse University.
+            Sourced from Confluence; optimized for human readers and Claude WebFetch.
+          </p>
+        </div>
+        <div>
+          <h3 class="footer-heading">Knowledge Base</h3>
+          <ul class="footer-links">
+            <li><a href="{{ base_url }}/{{ dept }}/">All tools</a></li>
+            <li><a href="{{ base_url }}/{{ dept }}/ai-general-information/">General info</a></li>
+            <li><a href="{{ base_url }}/{{ dept }}/ai-general-information/approved-tools-for-use-with-university-data.html">Approved tools list</a></li>
+            <li><a href="{{ base_url }}/llms.txt">/llms.txt</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-heading">Resources</h3>
+          <ul class="footer-links">
+            <li><a href="https://www.syracuse.edu" class="external-link" target="_blank" rel="noopener noreferrer">Syracuse University</a></li>
+            <li><a href="https://its.syr.edu" class="external-link" target="_blank" rel="noopener noreferrer">Information Technology Services</a></li>
+            <li><a href="https://answers.atlassian.syr.edu/wiki/spaces/ITSAI" class="external-link" target="_blank" rel="noopener noreferrer">Confluence (source)</a></li>
+            <li><a href="{{ github_url }}" class="external-link" target="_blank" rel="noopener noreferrer">GitHub repository</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; <span id="footYear">2026</span> Syracuse University · ITS Data &amp; AI</span>
+        <span class="footer-disclaimer">This site is independent of the official Clementine product, despite shared visual language.</span>
+      </div>
+    </footer>
+
+    <script src="{{ base_url }}/copy-markdown.js"></script>
+    <script>
+      (function () {
+        var nav = document.getElementById("siteNav");
+        var setNavState = function () {
+          if (window.scrollY > 32) nav.classList.add("scrolled");
+          else nav.classList.remove("scrolled");
+        };
+        setNavState();
+        window.addEventListener("scroll", setNavState, { passive: true });
+        document.getElementById("footYear").textContent = new Date().getFullYear();
+
+        var tocLinks = Array.prototype.slice.call(document.querySelectorAll(".toc-list a"));
+        var headings = tocLinks
+          .map(function (a) {
+            return document.getElementById(a.getAttribute("href").slice(1));
+          })
+          .filter(Boolean);
+        var activeFrame = null;
+
+        function setActiveToc(id) {
+          tocLinks.forEach(function (a) {
+            a.classList.toggle("is-active", a.getAttribute("href") === "#" + id);
+          });
+        }
+
+        function updateActiveToc() {
+          activeFrame = null;
+          if (!headings.length) return;
+          var navHeight = nav ? nav.offsetHeight : 0;
+          var threshold = navHeight + 32;
+          var active = headings[0];
+          headings.forEach(function (heading) {
+            if (heading.getBoundingClientRect().top <= threshold) active = heading;
+          });
+          var doc = document.documentElement;
+          if (window.innerHeight + window.scrollY >= doc.scrollHeight - 2) {
+            active = headings[headings.length - 1];
+          }
+          setActiveToc(active.id);
+        }
+
+        function requestActiveTocUpdate() {
+          if (activeFrame !== null) return;
+          activeFrame = window.requestAnimationFrame(updateActiveToc);
+        }
+
+        if (tocLinks.length && headings.length) {
+          window.addEventListener("scroll", requestActiveTocUpdate, { passive: true });
+          window.addEventListener("resize", requestActiveTocUpdate);
+          window.addEventListener("hashchange", function () {
+            window.setTimeout(requestActiveTocUpdate, 80);
+          });
+          tocLinks.forEach(function (a) {
+            a.addEventListener("click", function () {
+              window.setTimeout(requestActiveTocUpdate, 80);
+              window.setTimeout(requestActiveTocUpdate, 320);
+            });
+          });
+          requestActiveTocUpdate();
+          window.setTimeout(requestActiveTocUpdate, 300);
+        }
+      })();
+    </script>
+  </body>
+</html>
