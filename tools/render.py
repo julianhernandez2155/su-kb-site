@@ -5,6 +5,7 @@ site/_site/: HTML + verbatim .md mirror + llms.txt + sitemap.xml + robots.txt
 """
 from __future__ import annotations
 
+import hashlib
 import html
 import re
 import shutil
@@ -30,6 +31,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "site" / "content"
 DESIGN = ROOT / "_design"
 OUT = ROOT / "site" / "_site"
+ASSET_V = ""  # content hash appended to asset URLs (?v=) for cache-busting; set in main()
 RELATED_RE = re.compile(r"^##\s+Related\s*$", re.MULTILINE)
 _MD_LINK_RE = re.compile(r'(href=")([^"]+?)\.md(")')
 _ATTACH_RE = re.compile(r'((?:href|src)=")(?:\.\./|\./)*(attachments/[^"]+)(")')
@@ -242,7 +244,7 @@ def render_html(page: Page, pages: list[Page], env: Environment, slug_index: dic
     ctx = {"title": page.slug, "description": "", "page_id": "", "last_modified": None,
            "tags": [], "source_url": "#", **page.meta}
     ctx.update(dept=page.dept, slug=page.slug, rel_md_path=page.rel_path + ".md", body=body,
-               toc=page.toc, base_url=BASE_URL, github_url=GITHUB_URL,
+               toc=page.toc, asset_v=ASSET_V, base_url=BASE_URL, github_url=GITHUB_URL,
                department_label=DEPT_LABELS.get(page.dept, page.dept),
                canonical_url=f"{SITE_ORIGIN}{BASE_URL}/{page.dept}/{page.rel_path}.html",
                source_path=f"raw/knowledge-bases/ITSAI/{page.meta.get('page_id', '')}",
@@ -339,7 +341,7 @@ def render_index(dept: str, segs: list[str], node: dict, pages: list[Page],
         body.append(f'{head}<div class="hub-list">{"".join(items)}</div>')
     total = sum(1 for p in pages if p.dept == dept and list(p.ancestors[:len(segs)]) == list(segs))
     hub_meta = (f'{total} page{"s" if total != 1 else ""}'
-                + (f' &middot; {len(subs)} section{"s" if len(subs) != 1 else ""}' if subs else ""))
+                + (f' · {len(subs)} section{"s" if len(subs) != 1 else ""}' if subs else ""))
     # Breadcrumbs: Home › Dept › …segs (last is current, empty href).
     crumbs = [{"label": "Home", "href": f"{BASE_URL}/"}]
     acc = f"{BASE_URL}/{dept}"
@@ -350,7 +352,7 @@ def render_index(dept: str, segs: list[str], node: dict, pages: list[Page],
     ctx = {"title": label, "description": intro, "page_id": "index", "last_modified": None,
            "tags": [], "source_url": "#", "dept": dept, "slug": "index",
            "rel_md_path": (rel + "/" if rel else "") + "index.md", "body": "\n".join(body),
-           "toc": "", "is_hub": True, "hub_meta": hub_meta,
+           "toc": "", "is_hub": True, "hub_meta": hub_meta, "asset_v": ASSET_V,
            "base_url": BASE_URL, "github_url": GITHUB_URL,
            "department_label": DEPT_LABELS.get(dept, dept),
            "canonical_url": f"{SITE_ORIGIN}{BASE_URL}/{dept}/{rel + '/' if rel else ''}index.html",
@@ -424,7 +426,7 @@ def emit_landing(pages: list[Page], env: Environment) -> None:
                       "desc": desc, "kinds": kinds, "count": f"{n} page{'s' if n != 1 else ''}"})
     out = env.get_template("landing.html.jinja").render(
         base_url=BASE_URL, github_url=GITHUB_URL, dept="data-ai", cards=cards,
-        canonical_url=f"{SITE_ORIGIN}{BASE_URL}/")
+        asset_v=ASSET_V, canonical_url=f"{SITE_ORIGIN}{BASE_URL}/")
     (OUT / "index.html").write_text(out, encoding="utf-8")
 
 def copy_assets() -> None:
@@ -482,6 +484,14 @@ def main() -> None:
     for stale in ("llms.txt", "sitemap.xml", "robots.txt", "index.html"):
         (OUT / stale).unlink(missing_ok=True)
     copy_assets()
+    # Cache-bust: hash the emitted assets so each change yields a new ?v=, which
+    # bypasses GitHub Pages' 10-minute (max-age=600) browser cache on redeploy.
+    global ASSET_V
+    h = hashlib.sha1()
+    for a in [*ASSETS, "pygments.css"]:
+        if (OUT / a).exists():
+            h.update((OUT / a).read_bytes())
+    ASSET_V = h.hexdigest()[:8]
     # slug → (dept, rel_path) resolves in-corpus body links to their true nested
     # location regardless of the source link's authored relative path.
     slug_index = {p.slug: (p.dept, p.rel_path) for p in pages}

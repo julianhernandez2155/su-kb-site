@@ -13,9 +13,10 @@
     <meta property="og:url" content="{{ canonical_url }}" />
     <meta property="og:site_name" content="SU ITS Data & AI Knowledge Base" />
     <meta name="twitter:card" content="summary" />
-    <link rel="stylesheet" href="{{ base_url }}/tokens.css" />
-    <link rel="stylesheet" href="{{ base_url }}/pygments.css" />
-    <link rel="stylesheet" href="{{ base_url }}/docpage.css" />
+    <link rel="icon" href="{{ base_url }}/assets/img/syracuse-logo-orange.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="{{ base_url }}/tokens.css?v={{ asset_v }}" />
+    <link rel="stylesheet" href="{{ base_url }}/pygments.css?v={{ asset_v }}" />
+    <link rel="stylesheet" href="{{ base_url }}/docpage.css?v={{ asset_v }}" />
   </head>
   <body>
     <a href="#article" class="skip-link">Skip to main content</a>
@@ -186,7 +187,7 @@
       </div>
     </footer>
 
-    <script src="{{ base_url }}/copy-markdown.js"></script>
+    <script src="{{ base_url }}/copy-markdown.js?v={{ asset_v }}"></script>
     <script>
       (function () {
         var nav = document.getElementById("siteNav");
