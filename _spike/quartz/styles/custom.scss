@@ -1,0 +1,67 @@
+@use "./base.scss";
+
+// ── Sherman Sans @font-face (local hosting via Quartz fontOrigin: "local") ──
+// woff2 only — modern browsers; matches the clementine.syr.edu setup.
+
+@font-face {
+  font-family: "Sherman Sans";
+  src: url("/static/fonts/shermansans-book.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sherman Sans";
+  src: url("/static/fonts/shermansans-bookitalic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sherman Sans";
+  src: url("/static/fonts/shermansans-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+// ── SU design tokens (from clementine.syr.edu site.css) ──
+
+:root {
+  // Primary
+  --su-blue: #000e54;
+  --su-blue-medium: #203299;
+  --su-blue-light: #2b72d7;
+  --su-orange: #f76900;
+  --su-orange-light: #ff8e00;
+  --su-orange-medium: #ff431b;
+  --su-orange-dark: #d74100;
+  --su-white: #ffffff;
+
+  // Greyscale
+  --su-black: #000000;
+  --su-dark-grey: #404040;
+  --su-medium-grey: #707780;
+  --su-light-grey: #adb3b8;
+  --su-xlight-grey: #eff0f1;
+
+  // Tints
+  --su-blue-10: #e6e7ee;
+  --su-orange-10: #fef0e6;
+  --su-pale-gray: #f4f5f6;
+
+  // Gradients
+  --grad-blue: linear-gradient(118deg, #000e54 30.08%, #203299 98.9%);
+  --grad-orange: linear-gradient(84deg, #ff431b 0%, #f76900 50.67%, #ff8e00 100%);
+}
+
+// ── Section title accent: a quiet SU-orange underline on h1/h2 ──
+// Light touch in the spike; layouts/components get reworked in Stage 3 when
+// we promote to site/.
+article > h1,
+article > h2 {
+  border-bottom: 2px solid var(--su-orange);
+  padding-bottom: 0.25em;
+}

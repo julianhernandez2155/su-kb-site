@@ -1,21 +1,17 @@
-# _spike/ — Quartz + clementine integration test
+# Quartz v4
 
-**Status: disposable.** Scratch space to verify that clementine.syr.edu styling integrates cleanly into Quartz v4's component model before committing to the architecture in `../site/`.
+> “[One] who works with the door open gets all kinds of interruptions, but [they] also occasionally gets clues as to what the world is and what might be important.” — Richard Hamming
 
-## What's here (when work starts)
+Quartz is a set of tools that helps you publish your [digital garden](https://jzhao.xyz/posts/networked-thought) and notes as a website for free.
 
-- A vanilla Quartz v4 install (from `npx quartz create`)
-- Clementine assets dropped into `quartz/styles/` and `quartz/static/`:
-  - `site.css` from `C:\Users\julia\Documents\Codex\2026-05-28\can-you-go-to-this-website\`
-  - Sherman Sans `.woff2` (3 weights) from the same Codex directory
-  - SU color tokens (`--su-blue: #000E54`, `--su-orange: #F76900`, etc.)
-- 3 hand-written seed markdown pages in `content/data-ai/` to verify Quartz builds + GH Pages publishes
-- Adapted layouts using clementine class names (`.site-nav`, `.hero`, `.assistants`, `.asst-card`, `.data-privacy-banner`, `.site-footer`) per Codex's [`design.md`](C:\Users\julia\Documents\Codex\2026-05-28\can-you-go-to-this-website\design.md)
+🔗 Read the documentation and get started: https://quartz.jzhao.xyz/
 
-## Decision gate
+[Join the Discord Community](https://discord.gg/cRFFHYye7t)
 
-Per the plan: **if styling integration fights for >2 days, fall back to MkDocs-Material + `mkdocs-roamlinks-plugin`.** Document the call in a new ADR (`docs/decisions/000X-ssg-fallback.md`).
+## Sponsors
 
-## When to delete
-
-Once the spike's working setup is promoted into `../site/` (Stage 3 of the plan), delete this entire `_spike/` directory. Per [[handoff-ready-workspace]] convention, the underscore prefix signals "temporary support folder — not for long-term residence."
+<p align="center">
+  <a href="https://github.com/sponsors/jackyzha0">
+    <img src="https://cdn.jsdelivr.net/gh/jackyzha0/jackyzha0/sponsorkit/sponsors.svg" />
+  </a>
+</p>
