@@ -61,6 +61,19 @@
           <h1>{{ title }}</h1>
           <p class="article-lede">{{ description }}</p>
           <div class="article-meta">
+            {% if is_hub %}
+            <span class="article-meta-item">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <line x1="8" y1="6" x2="21" y2="6" />
+                <line x1="8" y1="12" x2="21" y2="12" />
+                <line x1="8" y1="18" x2="21" y2="18" />
+                <line x1="3" y1="6" x2="3.01" y2="6" />
+                <line x1="3" y1="12" x2="3.01" y2="12" />
+                <line x1="3" y1="18" x2="3.01" y2="18" />
+              </svg>
+              {{ hub_meta }}
+            </span>
+            {% else %}
             {% if last_modified %}
             <span class="article-meta-item">
               <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -81,6 +94,7 @@
             <span class="article-meta-tags">
               {% for tag in tags %}<span class="badge">{{ tag }}</span>{% endfor %}
             </span>
+            {% endif %}
           </div>
         </header>
 
@@ -101,6 +115,7 @@
               </svg>
               <span class="action-btn-label">Copy as markdown</span>
             </button>
+            {% if not is_hub %}
             <a href="{{ source_url }}" class="action-btn" target="_blank" rel="noopener noreferrer">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -110,6 +125,7 @@
               </svg>
               Edit on Confluence
             </a>
+            {% endif %}
             <a href="./{{ slug }}.md" class="action-btn">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

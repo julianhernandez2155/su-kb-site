@@ -259,6 +259,15 @@ def emit_md_mirror(page: Page) -> None:
 def _label(seg: str) -> str:
     return LABELS.get(seg, seg.replace("-", " ").title())
 
+# First matching tag becomes a page's type chip on hub listings.
+_TYPE_CHIPS = [("faq", "FAQ"), ("setup", "Setup"), ("how-to", "How-to"),
+               ("example-use", "Example"), ("security", "Security"),
+               ("policy", "Policy"), ("api", "API"), ("overview", "Overview")]
+
+def _type_chip(tags: list | None) -> str:
+    tset = set(tags or [])
+    return next((label for t, label in _TYPE_CHIPS if t in tset), "")
+
 def index_pages(pages: list[Page]) -> dict[tuple, dict]:
     """Map every directory containing pages → {pages, subdirs}.
 
@@ -285,25 +294,52 @@ def render_index(dept: str, segs: list[str], node: dict, pages: list[Page],
     rel = "/".join(segs)
     key = segs[-1] if segs else dept
     intro = INDEX_INTROS.get(key, f"Browse the pages in {label}.")
-    # Body: intro H1 + a Sections list (child subdirs) + a Pages list.
+    # Hub body: subsections as a compact card grid, pages as a rich list
+    # (title + type chip + description + audience) — built from enriched meta.
     subs = sorted(node["subdirs"], key=lambda s: GROUP_ORDER.index(s)
                   if s in GROUP_ORDER else 99)
-    body = [f'<h1 id="overview">{html.escape(label)}</h1>',
-            f'<p class="article-lede">{html.escape(intro)}</p>']
-    if subs:
-        li = "".join(f'<li><a href="./{s}/" class="wikilink">{html.escape(_label(s))}</a></li>'
-                     for s in subs)
-        body.append(f'<h2 id="sections">Sections</h2>\n<ul>{li}</ul>')
     ps = sorted(node["pages"], key=lambda x: x.meta.get("title", x.slug))
+
+    def under(sub: str) -> int:
+        pre = list(segs) + [sub]
+        return sum(1 for p in pages if p.dept == dept and list(p.ancestors[:len(pre)]) == pre)
+
+    body = []
+    if subs:
+        cards = []
+        for s in subs:
+            n = under(s)
+            sdesc = INDEX_INTROS.get(s, "")
+            cards.append(
+                f'<a class="hub-card" href="./{s}/"><span class="hub-card-title">'
+                f'{html.escape(_label(s))}</span>'
+                + (f'<span class="hub-card-desc">{html.escape(sdesc)}</span>' if sdesc else "")
+                + f'<span class="hub-card-foot"><span class="badge badge--accent">{n} '
+                f'page{"s" if n != 1 else ""}</span>'
+                f'<span class="hub-card-arrow" aria-hidden="true">&rarr;</span></span></a>')
+        head = '<h2 class="hub-h">Browse by section</h2>' if ps else ""
+        body.append(f'{head}<div class="hub-grid">{"".join(cards)}</div>')
     if ps:
-        li = "".join(
-            f'<li><a href="./{p.slug}.html" class="wikilink">{html.escape(p.meta.get("title", p.slug))}</a>'
-            + (f' — {html.escape((p.meta.get("description") or "").strip())}</li>'
-               if (p.meta.get("description") or "").strip() else "</li>") for p in ps)
-        body.append(f'<h2 id="pages">Pages</h2>\n<ul>{li}</ul>')
-    toc = ('<ul class="toc-list">'
-           + ('<li><a href="#sections">Sections</a></li>' if subs else "")
-           + ('<li><a href="#pages">Pages</a></li>' if ps else "") + "</ul>")
+        items = []
+        for p in ps:
+            chip = _type_chip(p.meta.get("tags"))
+            desc = (p.meta.get("description") or "").strip()
+            aud = p.meta.get("audience") or []
+            items.append(
+                f'<a class="hub-item" href="./{p.slug}.html"><span class="hub-item-head">'
+                f'<span class="hub-item-title">{html.escape(p.meta.get("title", p.slug))}</span>'
+                + (f'<span class="badge">{html.escape(chip)}</span>' if chip else "")
+                + "</span>"
+                + (f'<span class="hub-item-desc">{html.escape(desc)}</span>' if desc else "")
+                + ('<span class="hub-item-aud">'
+                   + "".join(f'<span class="hub-aud">{html.escape(a)}</span>' for a in aud)
+                   + "</span>" if aud else "")
+                + "</a>")
+        head = '<h2 class="hub-h">Pages</h2>' if subs else ""
+        body.append(f'{head}<div class="hub-list">{"".join(items)}</div>')
+    total = sum(1 for p in pages if p.dept == dept and list(p.ancestors[:len(segs)]) == list(segs))
+    hub_meta = (f'{total} page{"s" if total != 1 else ""}'
+                + (f' &middot; {len(subs)} section{"s" if len(subs) != 1 else ""}' if subs else ""))
     # Breadcrumbs: Home › Dept › …segs (last is current, empty href).
     crumbs = [{"label": "Home", "href": f"{BASE_URL}/"}]
     acc = f"{BASE_URL}/{dept}"
@@ -314,7 +350,8 @@ def render_index(dept: str, segs: list[str], node: dict, pages: list[Page],
     ctx = {"title": label, "description": intro, "page_id": "index", "last_modified": None,
            "tags": [], "source_url": "#", "dept": dept, "slug": "index",
            "rel_md_path": (rel + "/" if rel else "") + "index.md", "body": "\n".join(body),
-           "toc": toc, "base_url": BASE_URL, "github_url": GITHUB_URL,
+           "toc": "", "is_hub": True, "hub_meta": hub_meta,
+           "base_url": BASE_URL, "github_url": GITHUB_URL,
            "department_label": DEPT_LABELS.get(dept, dept),
            "canonical_url": f"{SITE_ORIGIN}{BASE_URL}/{dept}/{rel + '/' if rel else ''}index.html",
            "source_path": f"knowledge-bases/ITSAI/{dept}/{rel}".rstrip("/"), "breadcrumbs": crumbs,

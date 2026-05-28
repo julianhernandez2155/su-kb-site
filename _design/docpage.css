@@ -350,6 +350,147 @@
   margin-bottom: var(--space-5);
 }
 
+/* ── Section hub pages (directory indexes) ─────────────── */
+.hub-h {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--su-medium-grey);
+  margin: var(--space-7) 0 var(--space-4);
+}
+
+.article-body > .hub-h:first-child {
+  margin-top: var(--space-2);
+}
+
+/* Subsections: compact card grid */
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-4);
+}
+
+.hub-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--su-white);
+  text-decoration: none;
+  transition: border-color var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease, transform var(--duration-fast) ease;
+}
+
+.hub-card:hover {
+  border-color: var(--su-blue);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.hub-card-title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--su-blue);
+}
+
+.hub-card-desc {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--su-dark-grey);
+  flex: 1;
+}
+
+.hub-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-2);
+}
+
+.hub-card-arrow {
+  color: var(--su-orange-dark);
+  font-weight: 700;
+  transition: transform var(--duration-fast) ease;
+}
+
+.hub-card:hover .hub-card-arrow {
+  transform: translateX(3px);
+}
+
+/* Pages: rich vertical list (distinct from the section grid for rhythm) */
+.hub-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.hub-item {
+  display: block;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--su-white);
+  text-decoration: none;
+  transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+}
+
+.hub-item:hover {
+  border-color: var(--su-blue);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+}
+
+.hub-item-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: 0.35rem;
+}
+
+.hub-item-title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--su-blue);
+}
+
+.hub-item:hover .hub-item-title {
+  color: var(--su-orange-deep);
+}
+
+.hub-item-desc {
+  display: block;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--su-dark-grey);
+}
+
+.hub-item-aud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: var(--space-3);
+}
+
+.hub-aud {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: var(--su-medium-grey);
+  background: var(--su-xlight-grey);
+  border-radius: var(--radius-pill);
+  padding: 0.1rem 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .hub-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .article-meta {
   display: flex;
   flex-wrap: wrap;
