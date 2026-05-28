@@ -145,26 +145,59 @@ def load_corpus(md: MarkdownIt) -> list[Page]:
                           parts[1:-1], out_html, out_html.with_suffix(".md"), src))
     return pages
 
-def build_sidebar(pages: list[Page], dept: str, current_slug: str) -> str:
-    groups = {}
+def build_sidebar(pages: list[Page], dept: str,
+                  current_group: str | None = None, current_slug: str | None = None) -> str:
+    """Collapsible grouped nav: dept home + root pages, then one <details> per
+    tool group (with page count). example-uses etc. nest as a labelled sublist.
+    The group holding the current page is open; the rest stay collapsed so a
+    29-page corpus reads as ~5 sections, not one long wall."""
+    roots, groups = [], {}
     for p in pages:
         if p.dept != dept:
             continue
-        grp = p.ancestors[0] if p.ancestors else "_root"
-        groups.setdefault(grp, []).append(p)
-    out = []
-    for grp in _order(groups):
-        title = LABELS.get(grp, grp.replace("-", " ").title()) if grp != "_root" else ""
-        out.append('<div class="sidebar-section">')
-        if title:
-            out.append(f'<span class="sidebar-section-title">{html.escape(title)}</span>')
-        out.append('<ul class="sidebar-list">')
-        for p in sorted(groups[grp], key=lambda x: x.slug):
-            cur = ' aria-current="page"' if p.slug == current_slug and p.dept == dept else ""
-            # Root-absolute href so a sidebar link resolves from any page depth.
-            href = f"{BASE_URL}/{dept}/{p.rel_path}.html"
-            out.append(f'<li><a href="{href}"{cur}>{html.escape(p.meta.get("title", p.slug))}</a></li>')
-        out.append("</ul></div>")
+        if not p.ancestors:
+            roots.append(p)
+            continue
+        node = groups.setdefault(p.ancestors[0], {"direct": [], "subs": {}})
+        if len(p.ancestors) == 1:
+            node["direct"].append(p)
+        else:
+            node["subs"].setdefault(p.ancestors[1], []).append(p)
+
+    def link(p: Page) -> str:
+        cur = ' aria-current="page"' if (p.slug == current_slug and p.dept == dept) else ""
+        return (f'<li><a href="{BASE_URL}/{dept}/{p.rel_path}.html"{cur}>'
+                f'{html.escape(p.meta.get("title", p.slug))}</a></li>')
+
+    by_title = lambda x: x.meta.get("title", x.slug)
+    home_cur = ' aria-current="page"' if current_group is None and current_slug is None else ""
+    out = ['<nav class="doc-nav" aria-label="Section pages">',
+           f'<a class="nav-home" href="{BASE_URL}/{dept}/"{home_cur}>'
+           f'All {html.escape(DEPT_LABELS.get(dept, dept))}</a>']
+    for p in sorted(roots, key=by_title):
+        cur = ' aria-current="page"' if p.slug == current_slug else ""
+        out.append(f'<a class="nav-home nav-home--sub" '
+                   f'href="{BASE_URL}/{dept}/{p.rel_path}.html"{cur}>'
+                   f'{html.escape(p.meta.get("title", p.slug))}</a>')
+    for g in _order(groups):
+        node = groups[g]
+        count = len(node["direct"]) + sum(len(v) for v in node["subs"].values())
+        opn = " open" if g == current_group else ""
+        out.append(f'<details class="nav-group"{opn}>')
+        out.append(f'<summary class="nav-summary"><span class="nav-label">'
+                   f'{html.escape(_label(g))}</span>'
+                   f'<span class="nav-count">{count}</span></summary>')
+        out.append('<ul class="nav-list">')
+        for p in sorted(node["direct"], key=by_title):
+            out.append(link(p))
+        for sub in sorted(node["subs"]):
+            out.append(f'<li class="nav-sub"><span class="nav-sub-title">'
+                       f'{html.escape(_label(sub))}</span><ul class="nav-sublist">')
+            for p in sorted(node["subs"][sub], key=by_title):
+                out.append(link(p))
+            out.append('</ul></li>')
+        out.append('</ul></details>')
+    out.append('</nav>')
     return "\n".join(out)
 
 def related_for(page: Page, pages: list[Page]) -> list[Page]:
@@ -214,7 +247,8 @@ def render_html(page: Page, pages: list[Page], env: Environment, slug_index: dic
                canonical_url=f"{SITE_ORIGIN}{BASE_URL}/{page.dept}/{page.rel_path}.html",
                source_path=f"raw/knowledge-bases/ITSAI/{page.meta.get('page_id', '')}",
                breadcrumbs=breadcrumbs_for(page),
-               sidebar=build_sidebar(pages, page.dept, page.slug))
+               sidebar=build_sidebar(pages, page.dept,
+                                     page.ancestors[0] if page.ancestors else None, page.slug))
     page.out_html.parent.mkdir(parents=True, exist_ok=True)
     page.out_html.write_text(env.get_template("docpage.html.jinja").render(**ctx),
                              encoding="utf-8")
@@ -284,7 +318,7 @@ def render_index(dept: str, segs: list[str], node: dict, pages: list[Page],
            "department_label": DEPT_LABELS.get(dept, dept),
            "canonical_url": f"{SITE_ORIGIN}{BASE_URL}/{dept}/{rel + '/' if rel else ''}index.html",
            "source_path": f"knowledge-bases/ITSAI/{dept}/{rel}".rstrip("/"), "breadcrumbs": crumbs,
-           "sidebar": build_sidebar(pages, dept, segs[0] if len(segs) == 1 else "")}
+           "sidebar": build_sidebar(pages, dept, segs[0] if segs else None, None)}
     out_dir = OUT.joinpath(dept, *segs)
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "index.html").write_text(
