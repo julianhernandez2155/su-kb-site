@@ -36,3 +36,5 @@ desktop.ini
 
 # Export-tool build state (local only; CI does not export)
 site/content/**/.meta/
+# Exclusion report — local paper trail; names restricted titles, never committed
+export-tool/.last-exclusions.jsonl

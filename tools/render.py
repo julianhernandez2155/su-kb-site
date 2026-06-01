@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import hashlib
 import html
+import json
 import re
 import shutil
 from dataclasses import dataclass
@@ -472,11 +473,45 @@ def check_links() -> list[str]:
                 broken.append(f"{hf.relative_to(OUT)} -> {href}")
     return sorted(broken)
 
+def leak_guard(pages: list[Page]) -> None:
+    """Fail the build if a page the exporter classified restricted is present.
+
+    Defense in depth for the public-only invariant (ADR-0003). The authoritative
+    gate is in the export tool (it alone knows Confluence read restrictions);
+    this is a cheap second check keyed on the export's `.last-exclusions.jsonl`.
+    That report is local-only (gitignored), so in CI — which renders committed
+    content and never runs the export — the file is absent and this no-ops.
+    """
+    report = ROOT / "export-tool" / ".last-exclusions.jsonl"
+    if not report.exists():
+        return
+    restricted: set[str] = set()
+    for line in report.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if entry.get("reason") in ("read-restricted", "access-check-failed"):
+            pid = str(entry.get("page_id") or "")
+            if pid:
+                restricted.add(pid)
+    leaked = sorted({str(p.meta.get("page_id") or "") for p in pages} & restricted)
+    if leaked:
+        raise SystemExit(
+            f"leak-guard: {len(leaked)} restricted page(s) in site/content - "
+            f"page_id(s) {leaked} (ADR-0003 public-only). Build aborted."
+        )
+
+
 def main() -> None:
     env = Environment(loader=FileSystemLoader(str(DESIGN)),
                       autoescape=select_autoescape(["html", "jinja"]))
     md = build_md()
     pages = load_corpus(md)
+    leak_guard(pages)
     # Clean rebuild: drop stale rendered output so renamed/excluded pages don't
     # linger as orphans. Leave assets/ (OneDrive holds font handles); refreshed
     # in place by copy_assets().

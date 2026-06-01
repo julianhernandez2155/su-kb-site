@@ -1,11 +1,17 @@
 """Confluence v2 API client + pull-space orchestrator.
 
-Adapted from su-kb-pipeline's `sukb.ingest.puller` for su-kb-site. The access
-classification subsystem (access.py / restrictions.py / spaces.py) was removed:
-the public KB has no per-page RBAC, so every page is exported. See ADR-0002.
+Adapted from su-kb-pipeline's `sukb.ingest.puller` for su-kb-site.
+
+Public-only gate (ADR-0003): the site is served on public GitHub Pages, so a
+read-restricted page must never reach it. Each page is classified at export by
+its Confluence read restrictions (see `restrictions.py`) and **only public
+pages are written** — restricted ones are skipped, never written to disk, and
+listed in an exclusion report. This is a *binary* check (public vs not); the
+per-user/RBAC machinery from su-kb-pipeline is deliberately not salvaged.
 
 Drives the full ingestion flow for one space:
-  list pages → for each: check sync state → convert → download attachments → write.
+  list pages → for each: access gate → check sync state → convert →
+  download attachments → write.
 
 Yields progress events so a CLI (or future UI) can stream them.
 """
@@ -37,6 +43,7 @@ from .frontmatter import (
     slugify,
     validate,
 )
+from .restrictions import AncestorRestrictionCache, classify_page_access
 from .state import SyncState
 from .wikilinks import CorpusIndex, DefaultLinkResolver
 
@@ -342,6 +349,12 @@ class ConfluencePuller:
         state = SyncState.load(meta_root / ".sync-state.json")
         dead_letter_root = self.config.output_dir / "conversion-failures"
 
+        # Public-only access gate (ADR-0003). The cache de-dupes ancestor
+        # restriction checks across sibling pages; `exclusions` accumulates the
+        # paper trail (titles + ids only) written to .last-exclusions.jsonl.
+        access_cache = AncestorRestrictionCache(self)
+        exclusions: list[dict[str, Any]] = []
+
         # 2. First pass — list pages, build corpus index for wikilink resolution.
         all_pages = list(self.list_pages(space_id))
         corpus = CorpusIndex()
@@ -376,9 +389,40 @@ class ConfluencePuller:
             reason = self.config.exclusion_reason(title, [])
             if reason:
                 summary.pages_skipped += 1
+                exclusions.append({"page_id": pid, "title": title,
+                                   "reason": "draft", "detail": reason})
                 yield PullEvent("page_skipped", space_key, {
                     "page_id": pid, "title": title,
                     "reason": f"excluded ({reason})",
+                })
+                continue
+
+            # Public-only access gate (ADR-0003): publish only pages with no
+            # read restriction (direct or inherited). Runs BEFORE the version
+            # short-circuit — a page newly restricted since the last sync must
+            # be caught even when its body version didn't change — and before
+            # the body fetch, so restricted pages cost only the restriction
+            # calls. A page that fails the check is never written; any stale
+            # copy from a prior (public) sync is removed so it can't linger.
+            access = classify_page_access(self, page_meta, access_cache)
+            if not access.is_public:
+                summary.pages_skipped += 1
+                exclusions.append({
+                    "page_id": pid, "title": title,
+                    "reason": access.reason or "read-restricted",
+                    "restricted_by": access.restricted_by,
+                    **({"detail": access.error} if access.error else {}),
+                })
+                stale = find_existing_page_file(space_root, pid)
+                if stale is not None:
+                    try:
+                        stale.unlink()
+                    except OSError:
+                        pass
+                yield PullEvent("page_skipped", space_key, {
+                    "page_id": pid, "title": title,
+                    "reason": f"access: {access.reason}",
+                    "restricted_by": access.restricted_by,
                 })
                 continue
 
@@ -453,6 +497,8 @@ class ConfluencePuller:
                 reason = self.config.exclusion_reason(title, ancestor_path)
                 if reason:
                     summary.pages_skipped += 1
+                    exclusions.append({"page_id": pid, "title": title,
+                                       "reason": "draft", "detail": reason})
                     yield PullEvent("page_skipped", space_key, {
                         "page_id": pid, "title": title,
                         "reason": f"excluded ({reason})",
@@ -570,9 +616,26 @@ class ConfluencePuller:
                     "dead_letter_path": str(dl_path),
                 })
 
-        # 4. Persist state + manifest
+        # 4. Persist state + manifest + exclusion report (Stage 3, ADR-0003).
         state.save()
         _write_space_manifest(meta_root, space_key, space_id, space_name, len(all_pages), summary)
+
+        report_path = self.config.config_path.parent / ".last-exclusions.jsonl"
+        _write_exclusions_report(report_path, exclusions)
+        access_excluded = [e for e in exclusions
+                           if e["reason"] in ("read-restricted", "access-check-failed")]
+
+        # 5. Leak guard (Stage 5, ADR-0003): no page classified non-public may
+        # exist in the output tree. Authoritative check — the puller is the only
+        # surface that knows which page_ids are restricted. Fails the build.
+        leaked = _scan_for_restricted_pages(space_root, {e["page_id"] for e in access_excluded})
+        if leaked:
+            yield PullEvent("leak_detected", space_key, {"leaked": leaked,
+                                                         "exclusions_path": str(report_path)})
+            raise LeakGuardError(
+                f"{len(leaked)} read-restricted page(s) found in output {space_root}: "
+                f"{leaked}. Build failed (ADR-0003 public-only)."
+            )
 
         summary.duration_s = round(time.monotonic() - start, 3)
         yield PullEvent("completed", space_key, {
@@ -584,11 +647,62 @@ class ConfluencePuller:
                 "pages_failed": summary.pages_failed,
                 "duration_s": summary.duration_s,
                 "space_root": str(space_root),
-            }
+            },
+            "exclusions": {
+                "total": len(exclusions),
+                "read_restricted": sum(1 for e in exclusions if e["reason"] == "read-restricted"),
+                "access_check_failed": sum(1 for e in exclusions if e["reason"] == "access-check-failed"),
+                "draft": sum(1 for e in exclusions if e["reason"] == "draft"),
+                "report_path": str(report_path),
+            },
         })
 
 
 # --- helpers ------------------------------------------------------------------
+
+
+class LeakGuardError(RuntimeError):
+    """Raised when a read-restricted page is found in the output tree.
+
+    Public-only invariant (ADR-0003): a page classified non-public must never
+    appear under site/content. Raising this fails the export build loudly
+    rather than silently publishing restricted content.
+    """
+
+
+def _write_exclusions_report(report_path: Path, exclusions: list[dict[str, Any]]) -> None:
+    """Write the skipped-page manifest as JSONL (titles + ids only, never body).
+
+    One JSON object per skipped page: ``page_id``, ``title``, ``reason``
+    (``read-restricted`` / ``access-check-failed`` / ``draft``), and the
+    restriction/quality ``detail``. This is the paper trail proving the gate
+    ran; it is gitignored (local-only, and it names restricted titles).
+    """
+    import json
+
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    with report_path.open("w", encoding="utf-8") as fh:
+        for e in exclusions:
+            fh.write(json.dumps(e, ensure_ascii=False) + "\n")
+
+
+def _scan_for_restricted_pages(space_root: Path, restricted_ids: set[str]) -> list[str]:
+    """Return page_ids in ``restricted_ids`` whose markdown exists under root.
+
+    Reads each page's frontmatter ``page_id`` and reports any that were
+    classified non-public yet still landed on disk. Empty list = clean.
+    """
+    if not restricted_ids or not space_root.exists():
+        return []
+    found: list[str] = []
+    for md_path in space_root.rglob("*.md"):
+        fm = read_existing_frontmatter(md_path)
+        if not fm:
+            continue
+        pid = str(fm.get("page_id") or "")
+        if pid and pid in restricted_ids:
+            found.append(pid)
+    return found
 
 
 def _cursor_from_next(data: dict[str, Any]) -> str | None:

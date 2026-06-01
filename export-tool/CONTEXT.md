@@ -13,6 +13,15 @@ A Python coding agent (or developer) modifying the export pipeline. Assumes fami
 - `sync_config.yaml` — declares which Confluence spaces to pull, space→department mapping, wrapper-collapse rules
 - `tests/` — pytest suite (trimmed from prior 257 to ~120)
 
+## The two publication gates
+
+Two independent filters decide whether a page is written to `site/content/`; a page must clear **both**:
+
+1. **Access gate (public-only, the real visibility boundary)** — [`restrictions.py`](src/su_kb_export/restrictions.py), per ADR-0003. Classifies each page by its Confluence read restrictions (direct + inherited) and skips anything restricted. This is a *binary* `is_public` check — no per-user/RBAC tiers (that's Phase 2). Restricted pages are never written, never committed, and are listed in `.last-exclusions.jsonl`.
+2. **Content-quality gate (drafts)** — `SyncConfig.exclusion_reason()`. Name/segment match that keeps `(Test)` drafts + intern scratch off the *published* KB. This is **not** an access control — it answers "is this finished?", not "is this private?".
+
+A build-time **leak guard** (in the puller's export summary, and best-effort in [`../tools/render.py`](../tools/render.py)) fails the build if a page classified restricted is ever found in the output — defense in depth against a future misroute.
+
 ## Patterns used
 
 - **Macro-handler registry**: flat dict mapping macro name → handler callable; one entry per supported Confluence macro
@@ -32,6 +41,7 @@ A Python coding agent (or developer) modifying the export pipeline. Assumes fami
 
 ## Anti-patterns
 
-- Don't add access-classification code back. Public GH Pages = world-readable; access filtering happens at publish-time vetting, not load-time
+- Don't expand the access gate into per-user / per-department RBAC or a load-time check. Public GH Pages is world-readable; the only enforceable model here is the binary, export-time public-only classifier (ADR-0003). RBAC needs a separate authenticated surface — explicit Phase 2.
+- Don't lean on the name-based `exclude_*` filter to keep private content off the site. It's a draft filter; read restrictions are what gate visibility (`restrictions.py`).
 - Don't add RAG / MCP / chat code back. Those modules were intentionally cut
 - Don't write directly to the rendered `../site/public/` output; only to `../site/content/`

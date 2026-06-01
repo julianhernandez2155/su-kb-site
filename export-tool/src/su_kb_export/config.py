@@ -1,8 +1,11 @@
-"""Config loader for sync_config.yaml (su-kb-site, ADR-0002).
+"""Config loader for sync_config.yaml (su-kb-site, ADR-0002 / ADR-0003).
 
 Simplified from su-kb-pipeline's config: the public KB drops the three-knob
-inclusion logic, space categories, and broadly-accessible-spaces (no access
-subsystem). What remains:
+inclusion logic, space categories, and the broadly-accessible-spaces allowlist.
+Access is still enforced, but as a *binary* public-only gate in
+`restrictions.py` (ADR-0003), not the per-user RBAC machinery this config used
+to feed. The name-based `exclude_*` knobs below are now purely a
+content-quality (draft) filter, NOT the visibility boundary. What remains:
 
   space_departments  — Confluence space_key → site department slug
   collapse_ancestors — wrapper ancestor titles to skip when computing paths
@@ -64,12 +67,20 @@ class SyncConfig:
         return self.space_departments.get(space_key, self.default_department)
 
     def exclusion_reason(self, title: str, ancestor_path: list[str]) -> str | None:
-        """Return why a page is excluded, or None to keep it.
+        """Return why a page is a content-quality exclusion, or None to keep it.
 
         Excludes if the title starts with any `exclude_title_prefixes` entry,
         or if the title / any ancestor in `ancestor_path` matches an
-        `exclude_segments` entry (case-insensitive). Content-quality gate that
-        keeps intern scratch + (Test) drafts off the public KB (ADR-0002).
+        `exclude_segments` entry (case-insensitive).
+
+        **This is a content-quality (draft) gate only** — it keeps intern
+        scratch + `(Test)` drafts off the published KB. It is NOT the access
+        boundary: read-restricted pages are caught by the public-only
+        classifier in `restrictions.py` (ADR-0003), which is the real
+        visibility gate. The two stack — a page is dropped if it is restricted
+        OR a draft — but they answer different questions ("is this private?"
+        vs "is this finished content?"). Do not rely on a draft's name
+        happening to match here to keep restricted content private.
         """
         title = (title or "").strip()
         for prefix in self.exclude_title_prefixes:
