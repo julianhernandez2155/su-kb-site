@@ -43,8 +43,8 @@
           <p class="hero-panel">
             <strong>One place for the practical questions.</strong> What does Claude retain? Which
             tools handle FERPA data? How do I install Claude Code on Windows? This is the public
-            knowledge base for Syracuse University's ITS Data &amp; AI team — sourced from our
-            Confluence space, optimized for fast lookups and AI-friendly fetch.
+            knowledge base for Syracuse University's ITS Data &amp; AI team — Syracuse-hosted,
+            authored in Markdown, and optimized for fast lookups and AI-friendly fetch.
           </p>
           <div class="hero-ctas">
             <a href="#tools" class="btn btn-primary">
@@ -58,11 +58,11 @@
             <a href="#trust" class="btn btn-secondary">Read the policies</a>
           </div>
           <div class="hero-meta" aria-hidden="true">
-            <span class="hero-meta-item"><span class="hero-meta-dot"></span>Auto-synced from Confluence</span>
+            <span class="hero-meta-item"><span class="hero-meta-dot"></span>Syracuse-hosted on GitHub Pages</span>
+            <span class="hero-meta-item">·</span>
+            <span class="hero-meta-item">Authored in Markdown</span>
             <span class="hero-meta-item">·</span>
             <span class="hero-meta-item">LLM-friendly via /llms.txt</span>
-            <span class="hero-meta-item">·</span>
-            <span class="hero-meta-item">Last sync: today</span>
           </div>
         </div>
       </section>
@@ -73,8 +73,8 @@
             <span class="eyebrow">Supported tools</span>
             <h2 id="tools-heading">Every AI tool ITS supports, in one place</h2>
             <p>
-              Each card links into the canonical policy + setup pages. Mirrors the Confluence
-              hierarchy faithfully &mdash; only the wrappers were collapsed for cleaner URLs.
+              Each card links into the canonical policy + setup pages, organized by tool with
+              clean, predictable URLs.
             </p>
           </header>
 
@@ -112,15 +112,15 @@
       <section class="trust-banner" id="trust" aria-labelledby="trust-h1 trust-h2">
         <div class="trust-inner">
           <div class="trust-block">
-            <span class="eyebrow">Authoritative source</span>
-            <h2 id="trust-h1">Confluence is the <span class="accent">source of truth</span></h2>
+            <span class="eyebrow">Owned by Syracuse</span>
+            <h2 id="trust-h1">Markdown the university <span class="accent">controls end to end</span></h2>
             <p>
-              Every page on this site is mirrored from Syracuse's Confluence space (ITSAI), with
-              the page-ID preserved in the frontmatter for traceability. When something is wrong
-              here, the fix happens upstream — and flows down on the next sync.
+              Every page is plain Markdown, versioned in Git and published by Syracuse on
+              GitHub Pages — full control over hosting, formatting, and access, with no hosted-wiki
+              vendor in the loop. Each page carries a stable identifier in its frontmatter for traceability.
             </p>
-            <a href="https://answers.atlassian.syr.edu/wiki/spaces/ITSAI" class="btn btn-ghost external-link" target="_blank" rel="noopener noreferrer">
-              View source in Confluence
+            <a href="{{ github_url }}" class="btn btn-ghost external-link" target="_blank" rel="noopener noreferrer">
+              View the source on GitHub
             </a>
           </div>
           <div class="trust-block">
@@ -145,7 +145,7 @@
           <img src="{{ base_url }}/assets/img/syracuse-logo-orange.svg" alt="Syracuse University" />
           <p>
             Public knowledge base for the ITS Data &amp; AI department at Syracuse University.
-            Sourced from Confluence; optimized for human readers and Claude WebFetch.
+            Syracuse-hosted Markdown, optimized for human readers and Claude WebFetch.
           </p>
         </div>
         <div>
@@ -162,7 +162,6 @@
           <ul class="footer-links">
             <li><a href="https://www.syracuse.edu" class="external-link" target="_blank" rel="noopener noreferrer">Syracuse University</a></li>
             <li><a href="https://its.syr.edu" class="external-link" target="_blank" rel="noopener noreferrer">Information Technology Services</a></li>
-            <li><a href="https://answers.atlassian.syr.edu/wiki/spaces/ITSAI" class="external-link" target="_blank" rel="noopener noreferrer">Confluence (source)</a></li>
             <li><a href="{{ github_url }}" class="external-link" target="_blank" rel="noopener noreferrer">GitHub repository</a></li>
           </ul>
         </div>

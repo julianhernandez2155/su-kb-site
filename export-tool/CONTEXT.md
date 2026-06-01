@@ -1,6 +1,6 @@
 # export-tool/ context
 
-Python tool that pulls Confluence pages, converts them to clean markdown, and writes them into `../site/content/<department>/`. Salvaged from the prior [`su-kb-pipeline`](../../su-kb-pipeline/) project (~30–40% of that codebase carries over; everything chat/web/access was cut).
+Python **migration tool** that pulls Confluence pages, converts them to clean markdown, and writes them into `../site/content/<department>/`. This is a **one-time seed/migration**, not a live sync — the project is moving *off* Confluence toward markdown-native authoring (see project [CLAUDE.md](../CLAUDE.md) "Vision & scope"). Once content lands in `site/content/`, that markdown is the source going forward. Salvaged from the prior [`su-kb-pipeline`](../../su-kb-pipeline/) project (~30–40% of that codebase carries over; everything chat/web/access was cut).
 
 ## Audience
 
@@ -28,7 +28,7 @@ A Python coding agent (or developer) modifying the export pipeline. Assumes fami
 - Tests live in `tests/`, mirror the `src/` structure
 - New macros: one entry in `src/su_kb_export/macros.py` `MACRO_HANDLERS`
 - New dependency: justify against existing tools (this code intentionally runs without FastAPI / anthropic / sse-starlette / jinja2)
-- The output of this tool is consumed by Quartz in `../site/`; don't break the frontmatter contract
+- The output of this tool is consumed by the renderer (`../tools/render.py`); don't break the 8-field frontmatter contract
 
 ## Anti-patterns
 

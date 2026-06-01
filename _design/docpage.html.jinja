@@ -116,17 +116,15 @@
               </svg>
               <span class="action-btn-label">Copy as markdown</span>
             </button>
-            {% if not is_hub %}
-            <a href="{{ source_url }}" class="action-btn" target="_blank" rel="noopener noreferrer">
+            <a href="{{ github_url }}" class="action-btn" target="_blank" rel="noopener noreferrer">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                 <polyline points="15 3 21 3 21 9" />
                 <line x1="10" y1="14" x2="21" y2="3" />
               </svg>
-              Edit on Confluence
+              View on GitHub
             </a>
-            {% endif %}
             <a href="./{{ slug }}.md" class="action-btn">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -137,10 +135,7 @@
             </a>
           </div>
           <div class="article-footer-meta">
-            <span class="article-footer-source">
-              Source: <code>{{ source_path }}</code>
-            </span>
-            <span>Sourced from Confluence. <em>Edit upstream for changes to stick.</em></span>
+            <span>Plain Markdown, Syracuse-hosted on GitHub Pages. <em>Optimized for human readers and Claude WebFetch.</em></span>
           </div>
         </footer>
       </article>
@@ -159,7 +154,7 @@
           <img src="{{ base_url }}/assets/img/syracuse-logo-orange.svg" alt="Syracuse University" />
           <p>
             Public knowledge base for the ITS Data &amp; AI department at Syracuse University.
-            Sourced from Confluence; optimized for human readers and Claude WebFetch.
+            Syracuse-hosted Markdown, optimized for human readers and Claude WebFetch.
           </p>
         </div>
         <div>
@@ -176,7 +171,6 @@
           <ul class="footer-links">
             <li><a href="https://www.syracuse.edu" class="external-link" target="_blank" rel="noopener noreferrer">Syracuse University</a></li>
             <li><a href="https://its.syr.edu" class="external-link" target="_blank" rel="noopener noreferrer">Information Technology Services</a></li>
-            <li><a href="https://answers.atlassian.syr.edu/wiki/spaces/ITSAI" class="external-link" target="_blank" rel="noopener noreferrer">Confluence (source)</a></li>
             <li><a href="{{ github_url }}" class="external-link" target="_blank" rel="noopener noreferrer">GitHub repository</a></li>
           </ul>
         </div>
