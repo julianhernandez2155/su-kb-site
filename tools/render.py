@@ -207,7 +207,10 @@ def related_for(page: Page, pages: list[Page]) -> list[Page]:
     scored = [(len(tags & set(o.meta.get("tags") or [])), o.meta.get("last_modified", ""), o)
               for o in pages if o is not page]
     scored = [s for s in scored if s[0]]
-    scored.sort(key=lambda t: (t[0], t[1]), reverse=True)
+    # Coerce the last_modified tiebreaker to str: PyYAML parses unquoted
+    # `YYYY-MM-DD` as datetime.date but quoted ones stay str, and mixing the
+    # two breaks the tuple comparison. ISO strings still sort chronologically.
+    scored.sort(key=lambda t: (t[0], str(t[1])), reverse=True)
     return [o for _, _, o in scored[:5]]
 
 def breadcrumbs_for(page: Page) -> list[dict]:
