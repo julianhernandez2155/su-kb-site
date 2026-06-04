@@ -7,6 +7,8 @@
     <meta name="description" content="{{ description }}" />
     <link rel="canonical" href="{{ canonical_url }}" />
     <link rel="alternate" type="text/markdown" href="{{ base_url }}/{{ dept }}/{{ rel_md_path }}" />
+    <link rel="alternate" type="text/plain" href="{{ base_url }}/llms.txt" title="llms.txt" />
+    <link rel="alternate" type="text/plain" href="{{ base_url }}/llms-full.txt" title="llms-full.txt" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{ title }}" />
     <meta property="og:description" content="{{ description }}" />
@@ -17,6 +19,7 @@
     <link rel="stylesheet" href="{{ base_url }}/tokens.css?v={{ asset_v }}" />
     <link rel="stylesheet" href="{{ base_url }}/pygments.css?v={{ asset_v }}" />
     <link rel="stylesheet" href="{{ base_url }}/docpage.css?v={{ asset_v }}" />
+    {% if json_ld %}<script type="application/ld+json">{{ json_ld | safe }}</script>{% endif %}
   </head>
   <body>
     <a href="#article" class="skip-link">Skip to main content</a>

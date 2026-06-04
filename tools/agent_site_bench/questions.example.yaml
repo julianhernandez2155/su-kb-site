@@ -1,0 +1,16 @@
+questions:
+  - id: claude_products
+    question: "What is the difference between Claude Chat, Claude Code, and Claude API access at Syracuse University?"
+    expected_urls:
+      - "/data-ai/claude/understanding-claude-products-chat-code-and-api.md"
+    rubric: "A strong answer distinguishes the product surfaces, names the intended audiences, and cites the pages used."
+  - id: notebooklm
+    question: "How can someone at Syracuse use Google NotebookLM for study or research support?"
+    expected_urls:
+      - "/data-ai/gemini/how-to-use-google-notebooklm.md"
+    rubric: "A strong answer identifies NotebookLM, gives practical use cases, and cites source URLs."
+  - id: mentorai_api
+    question: "Where should a developer look for MentorAI API guidance, and what setup details matter?"
+    expected_urls:
+      - "/data-ai/clementine-platform/mentorai-using-the-api.md"
+    rubric: "A strong answer finds API-specific guidance rather than a generic MentorAI overview."

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """SU ITS Data & AI KB — thin renderer (ADR-0002). Renders site/content to
-site/_site/: HTML + verbatim .md mirror + llms.txt + sitemap.xml + robots.txt
+site/_site/: HTML + verbatim .md mirror + llms.txt + llms-full.txt + sitemap.xml + robots.txt
 + landing. Static config/data lives in kb_config.py (off the 300-line ceiling).
 """
 from __future__ import annotations
@@ -224,6 +224,53 @@ def breadcrumbs_for(page: Page) -> list[dict]:
     crumbs.append({"label": page.meta.get("title", page.slug), "href": ""})
     return crumbs
 
+def _as_list(value) -> list:
+    if not value:
+        return []
+    return value if isinstance(value, list) else [value]
+
+def _json_ready(data):
+    if isinstance(data, dict):
+        return {k: _json_ready(v) for k, v in data.items() if v not in (None, "", [], {})}
+    if isinstance(data, list):
+        return [_json_ready(v) for v in data if v not in (None, "", [], {})]
+    return str(data) if hasattr(data, "isoformat") else data
+
+def _json_ld(data: dict) -> str:
+    return json.dumps(_json_ready(data), ensure_ascii=True, separators=(",", ":"))
+
+def _site_graph(canonical_url: str) -> dict:
+    return {"@type": "WebSite", "name": "SU ITS Data & AI Knowledge Base",
+            "url": f"{SITE_ORIGIN}{BASE_URL}/", "@id": f"{SITE_ORIGIN}{BASE_URL}/#website",
+            "isPartOf": {"@type": "Organization", "name": "Syracuse University"},
+            "potentialAction": {"@type": "ReadAction", "target": canonical_url}}
+
+def _doc_json_ld(page: Page, ctx: dict) -> str:
+    source_url = ctx.get("source_url")
+    data = {"@context": "https://schema.org", "@type": "TechArticle",
+            "headline": ctx.get("title"), "description": ctx.get("description"),
+            "url": ctx.get("canonical_url"), "dateModified": ctx.get("last_modified"),
+            "inLanguage": "en", "isPartOf": _site_graph(ctx.get("canonical_url")),
+            "publisher": {"@type": "Organization", "name": "Syracuse University"},
+            "about": _as_list(ctx.get("tags")),
+            "audience": [{"@type": "Audience", "audienceType": a}
+                         for a in _as_list(ctx.get("audience"))],
+            "encoding": {"@type": "MediaObject", "encodingFormat": "text/markdown",
+                         "contentUrl": f"{SITE_ORIGIN}{BASE_URL}/{page.dept}/{page.rel_path}.md"}}
+    if source_url and source_url != "#":
+        data["citation"] = source_url
+    return _json_ld(data)
+
+def _collection_json_ld(name: str, description: str, canonical_url: str, item_urls: list[str]) -> str:
+    return _json_ld({"@context": "https://schema.org", "@type": "CollectionPage",
+                     "name": name, "description": description, "url": canonical_url,
+                     "inLanguage": "en", "isPartOf": _site_graph(canonical_url),
+                     "publisher": {"@type": "Organization", "name": "Syracuse University"},
+                     "mainEntity": {"@type": "ItemList",
+                                    "itemListElement": [{"@type": "ListItem", "position": i + 1,
+                                                         "url": url}
+                                                        for i, url in enumerate(item_urls)]}})
+
 def render_html(page: Page, pages: list[Page], env: Environment, slug_index: dict) -> None:
     # In-corpus body links are authored relative (`./slug.md`) for a flat corpus;
     # wrapper-collapse nested the tree, so resolve by slug to the true emitted
@@ -255,6 +302,7 @@ def render_html(page: Page, pages: list[Page], env: Environment, slug_index: dic
                breadcrumbs=breadcrumbs_for(page),
                sidebar=build_sidebar(pages, page.dept,
                                      page.ancestors[0] if page.ancestors else None, page.slug))
+    ctx["json_ld"] = _doc_json_ld(page, ctx)
     page.out_html.parent.mkdir(parents=True, exist_ok=True)
     page.out_html.write_text(env.get_template("docpage.html.jinja").render(**ctx),
                              encoding="utf-8")
@@ -362,6 +410,10 @@ def render_index(dept: str, segs: list[str], node: dict, pages: list[Page],
            "canonical_url": f"{SITE_ORIGIN}{BASE_URL}/{dept}/{rel + '/' if rel else ''}index.html",
            "source_path": f"knowledge-bases/ITSAI/{dept}/{rel}".rstrip("/"), "breadcrumbs": crumbs,
            "sidebar": build_sidebar(pages, dept, segs[0] if segs else None, None)}
+    ctx["json_ld"] = _collection_json_ld(
+        label, intro, ctx["canonical_url"],
+        [f"{SITE_ORIGIN}{BASE_URL}/{p.dept}/{p.rel_path}.html" for p in ps],
+    )
     out_dir = OUT.joinpath(dept, *segs)
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "index.html").write_text(
@@ -385,10 +437,49 @@ def _grouped(pages: list[Page]) -> dict:
 def _order(groups) -> list[str]:
     return [g for g in GROUP_ORDER if g in groups] + [g for g in groups if g not in GROUP_ORDER]
 
+_LLMS_EXTRA_KEYWORDS = {
+    "understanding-claude-products-chat-code-and-api":
+        "Claude Chat vs Claude Code vs Claude API, request access, premium seats, Anthropic Console.",
+    "purchase-claude-code-and-claude-api-access":
+        "buy or request Claude Code, Claude API credits, premium Claude seats, funding options.",
+    "how-to-use-google-notebooklm":
+        "NotebookLM study support, research assistant, source-grounded notebooks, audio overviews, "
+        "flashcards, quizzes, course readings.",
+    "mentorai-using-the-api":
+        "mentorAI API, Clementine API, API key request, PowerShell examples, datasets, chat sessions, "
+        "programmatic access.",
+    "approved-tools-for-use-with-university-data":
+        "approved AI tools, university data classification, FERPA, HIPAA, protected information.",
+}
+
+def _page_md_url(page: Page) -> str:
+    return f"{SITE_ORIGIN}{BASE_URL}/{page.dept}/{page.rel_path}.md"
+
+def _page_html_url(page: Page) -> str:
+    return f"{SITE_ORIGIN}{BASE_URL}/{page.dept}/{page.rel_path}.html"
+
+def _llms_desc(page: Page) -> str:
+    parts = []
+    desc = (page.meta.get("description") or "").strip()
+    if desc:
+        parts.append(desc)
+    tags = _as_list(page.meta.get("tags"))
+    if tags:
+        parts.append("Topics: " + ", ".join(str(t) for t in tags))
+    audience = _as_list(page.meta.get("audience"))
+    if audience:
+        parts.append("Audience: " + ", ".join(str(a) for a in audience))
+    extra = _LLMS_EXTRA_KEYWORDS.get(page.slug)
+    if extra:
+        parts.append("Retrieval aliases: " + extra)
+    return " ".join(parts) or f"{page.meta.get('title', page.slug)} overview"
+
 def emit_llms_txt(pages: list[Page]) -> None:
     lines = ["# SU ITS Data & AI Knowledge Base", "",
              "> Public knowledge base for the ITS Data & AI department at Syracuse University,",
-             "> sourced from Confluence. Append `.md` to any page URL for clean markdown.",
+             "> sourced from Confluence. Start here for fast retrieval: choose the most relevant",
+             "> Markdown URL below, fetch that `.md` page, and cite its `source_url` frontmatter.",
+             "> Use `/llms-full.txt` only when a single full-corpus context file is needed.",
              "> This site is independent of the official Clementine product.", ""]
     for dept, groups in _grouped(pages).items():
         lines += [f"## {DEPT_LABELS.get(dept, dept)}", ""]
@@ -396,10 +487,35 @@ def emit_llms_txt(pages: list[Page]) -> None:
             if grp != "_root":
                 lines.append(f"### {LABELS.get(grp, grp.title())}")
             for p in sorted(groups[grp], key=lambda x: x.slug):
-                desc = p.meta.get("description", "").strip() or f"{p.meta.get('title')} — overview"
+                desc = _llms_desc(p)
                 lines.append(f"- [{p.meta.get('title', p.slug)}](./{dept}/{p.rel_path}.md): {desc}")
             lines.append("")
     (OUT / "llms.txt").write_text("\n".join(lines), encoding="utf-8")
+
+def emit_llms_full_txt(pages: list[Page]) -> None:
+    lines = ["# SU ITS Data & AI Knowledge Base - Full Markdown Corpus", "",
+             "This file concatenates the public Markdown pages for agents that need a",
+             "single context source. For normal question answering, fetch `/llms.txt`",
+             "first and then fetch the one or two most relevant `.md` page URLs.", ""]
+    for p in sorted(pages, key=lambda x: (x.dept, x.rel_path)):
+        meta = {"title": p.meta.get("title", p.slug), "url": _page_html_url(p),
+                "markdown_url": _page_md_url(p), "source_url": p.meta.get("source_url"),
+                "page_id": p.meta.get("page_id"), "tags": _as_list(p.meta.get("tags")),
+                "audience": _as_list(p.meta.get("audience")),
+                "last_modified": p.meta.get("last_modified")}
+        lines += ["---"]
+        lines += [f"{k}: {json.dumps(_json_ready(v), ensure_ascii=True)}"
+                  for k, v in _json_ready(meta).items()]
+        lines += ["---", "", p.body_md.strip(), ""]
+    (OUT / "llms-full.txt").write_text("\n".join(lines), encoding="utf-8")
+
+def emit_ai_discovery_files() -> None:
+    well_known = OUT / ".well-known"
+    well_known.mkdir(parents=True, exist_ok=True)
+    for name in ("llms.txt", "llms-full.txt"):
+        src = OUT / name
+        if src.exists():
+            shutil.copyfile(src, well_known / name)
 
 def emit_sitemap(pages: list[Page]) -> None:
     rows = [f"  <url><loc>{SITE_ORIGIN}{BASE_URL}/</loc></url>"]
@@ -428,10 +544,28 @@ def emit_landing(pages: list[Page], env: Environment) -> None:
         n = len(groups.get(grp, []))
         cards.append({"slug": grp, "icon": icon, "title": title, "tag": tag, "featured": feat,
                       "desc": desc, "kinds": kinds, "count": f"{n} page{'s' if n != 1 else ''}"})
+    canonical_url = f"{SITE_ORIGIN}{BASE_URL}/"
+    section_urls = [f"{SITE_ORIGIN}{BASE_URL}/data-ai/{card['slug']}/" for card in cards]
     out = env.get_template("landing.html.jinja").render(
         base_url=BASE_URL, github_url=GITHUB_URL, dept="data-ai", cards=cards,
-        asset_v=ASSET_V, canonical_url=f"{SITE_ORIGIN}{BASE_URL}/")
+        asset_v=ASSET_V, canonical_url=canonical_url,
+        json_ld=_collection_json_ld(
+            "SU ITS Data & AI Knowledge Base",
+            "Public knowledge base for Syracuse University's ITS Data & AI department.",
+            canonical_url, section_urls))
     (OUT / "index.html").write_text(out, encoding="utf-8")
+    lines = ["# SU ITS Data & AI Knowledge Base", "",
+             "Public knowledge base for Syracuse University's ITS Data & AI department.",
+             "Use this homepage mirror when an agent starts from the site root.",
+             "",
+             "## Retrieval entry points", "",
+             "- [Fast retrieval index](./llms.txt)",
+             "- [Full Markdown corpus](./llms-full.txt)",
+             "- [Sitemap](./sitemap.xml)", "",
+             "## Sections", ""]
+    lines += [f"- [{card['title']}](./data-ai/{card['slug']}/): {card['desc']}"
+              for card in cards]
+    (OUT / "index.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 def copy_assets() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
@@ -519,7 +653,9 @@ def main() -> None:
     for dept in depts:
         if (OUT / dept).exists():
             shutil.rmtree(OUT / dept, onexc=lambda f, p, e: None)
-    for stale in ("llms.txt", "sitemap.xml", "robots.txt", "index.html"):
+    if (OUT / ".well-known").exists():
+        shutil.rmtree(OUT / ".well-known", onexc=lambda f, p, e: None)
+    for stale in ("llms.txt", "llms-full.txt", "sitemap.xml", "robots.txt", "index.html", "index.md"):
         (OUT / stale).unlink(missing_ok=True)
     copy_assets()
     # Cache-bust: hash the emitted assets so each change yields a new ?v=, which
@@ -543,7 +679,12 @@ def main() -> None:
     dirs = index_pages(pages)
     for (dept, segs), node in dirs.items():
         render_index(dept, list(segs), node, pages, env)
-    emit_llms_txt(pages); emit_sitemap(pages); emit_robots(); emit_landing(pages, env)  # noqa: E702
+    emit_llms_txt(pages)
+    emit_llms_full_txt(pages)
+    emit_ai_discovery_files()
+    emit_sitemap(pages)
+    emit_robots()
+    emit_landing(pages, env)
     broken = check_links()
     print(f"Rendered {len(pages)} pages + {len(dirs)} index pages to {OUT}")
     if broken:

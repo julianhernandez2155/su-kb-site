@@ -1,0 +1,24 @@
+# Compare exactly two public knowledge-base sites.
+sites:
+  - name: julia_current
+    start_url: "https://julianhernandez2155.github.io/su-kb-site/"
+    # Optional. Defaults to the directory containing start_url.
+    machine_root_url: "https://julianhernandez2155.github.io/su-kb-site/"
+    protected_design: true
+  - name: comparison
+    start_url: "https://example.github.io/comparison-kb/"
+    machine_root_url: "https://example.github.io/comparison-kb/"
+
+models:
+  # Must support OpenAI-compatible tool_calls through OpenRouter.
+  agent: "openai/gpt-4.1-mini"
+  # Should reliably return JSON.
+  judge: "openai/gpt-4.1-mini"
+
+max_fetches: 8
+retrieval_top_k: 3
+timeout_seconds: 20
+max_page_chars: 12000
+allow_external_fetches: false
+openrouter_base_url: "https://openrouter.ai/api/v1"
+user_agent: "agent_site_bench/0.1 (+https://github.com/julianhernandez2155/su-kb-site)"

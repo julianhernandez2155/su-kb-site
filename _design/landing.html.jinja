@@ -6,6 +6,9 @@
     <title>SU ITS Data &amp; AI · Knowledge Base</title>
     <meta name="description" content="Public knowledge base for Syracuse University's ITS Data & AI department. Policies, setup guides, and example workflows for Claude, Copilot, Gemini, mentorAI, and more." />
     <link rel="canonical" href="{{ canonical_url }}" />
+    <link rel="alternate" type="text/markdown" href="{{ base_url }}/index.md" />
+    <link rel="alternate" type="text/plain" href="{{ base_url }}/llms.txt" title="llms.txt" />
+    <link rel="alternate" type="text/plain" href="{{ base_url }}/llms-full.txt" title="llms-full.txt" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="SU ITS Data &amp; AI Knowledge Base" />
     <meta property="og:description" content="Public knowledge base for Syracuse University's ITS Data & AI department." />
@@ -15,6 +18,7 @@
     <link rel="icon" href="{{ base_url }}/assets/img/syracuse-logo-orange.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="{{ base_url }}/tokens.css?v={{ asset_v }}" />
     <link rel="stylesheet" href="{{ base_url }}/landing.css?v={{ asset_v }}" />
+    {% if json_ld %}<script type="application/ld+json">{{ json_ld | safe }}</script>{% endif %}
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to main content</a>

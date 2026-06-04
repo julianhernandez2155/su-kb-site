@@ -29,7 +29,13 @@ INDEX_INTROS = {
     "example-uses": "Concrete, reviewed examples of using Claude for real student and staff tasks.",
 }
 COLLAPSE_GUARD = {"ai-at-syracuse-university", "ai"}
-AGENTS = ["Claude-User", "ClaudeBot", "GPTBot", "PerplexityBot", "Google-Extended"]
+AGENTS = [
+    "OAI-SearchBot", "ChatGPT-User", "GPTBot",
+    "Claude-User", "Claude-SearchBot", "ClaudeBot", "anthropic-ai",
+    "PerplexityBot", "Perplexity-User",
+    "Googlebot", "Google-Extended",
+    "Applebot", "Applebot-Extended", "DuckAssistBot",
+]
 
 # Inline SVG icon paths reused from docpage.html (triangle / circle-i).
 CALLOUT_ICONS = {
