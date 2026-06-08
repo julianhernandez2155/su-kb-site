@@ -1,6 +1,6 @@
 # Project Status — su-kb-site
 
-_Last updated: 2026-06-04_
+_Last updated: 2026-06-08_
 
 > **Reconciliation note (2026-06-01):** the prior snapshot was written mid-pivot on 2026-05-28 and missed the **7 commits that *executed* the pivot that same evening**. This update realigns STATUS with git reality — Stages 1–8 are done and live; Stage 9 + cleanup remain.
 
@@ -12,7 +12,9 @@ _Last updated: 2026-06-04_
 
 **Update (2026-06-01 evening):** public-only access classification ([ADR-0003](decisions/0003-public-only-access-classification.md)) is shipped and live. The export now classifies each page by its Confluence read restrictions and publishes only public ones; restricted pages are skipped with a leak-guard backstop. Live re-export confirmed the 3 restricted intern pages excluded and all 29 public pages published.
 
-**Next:** Figure out the **authoring workflow** — how do we add new markdown pages to the site? (See "What's next" below.)
+**Update (2026-06-08):** the **authoring workflow shipped.** `faculty-page-authoring` is built and committed across RPI Phases 1–3, and **validated live on SU Claude Enterprise** — a real page drafted by the skill (with no hand-editing) is live on GitHub Pages and passes the validator. The publish gate (`check_frontmatter.py` + CI + the restricted-merge model, [ADR-0004](decisions/0004-human-gate-via-restricted-merge-access.md)) is committed but **not yet enforcing**: it goes live only when branch protection is flipped on the pushed repo.
+
+**Next:** Push `main`, then flip branch protection (require PR + required `validate` check + restrict merge) and run the blocked-PR test — the live fail-closed proof. (See "What's next.")
 
 ## What's working
 
@@ -29,9 +31,14 @@ _Last updated: 2026-06-04_
 
 ## What's next
 
-Stages 1–8 of [`docs/next-session-plan.md`](next-session-plan.md) (2026-05-28) and the public-only classifier ([ADR-0003](decisions/0003-public-only-access-classification.md), 2026-06-01) have shipped and are live. The next focus is authoring:
+Stages 1–8 of [`docs/next-session-plan.md`](next-session-plan.md) (2026-05-28) and the public-only classifier ([ADR-0003](decisions/0003-public-only-access-classification.md), 2026-06-01) shipped and are live. The **authoring workflow** (`faculty-page-authoring`) is now built, committed (5 commits, 2026-06-08), and live-validated; the remaining work is GitHub-side gate activation:
 
-1. **Authoring workflow — RPI research done → CONDITIONAL GO.** Scoped REQUEST at [`rpi/faculty-page-authoring/REQUEST.md`](../rpi/faculty-page-authoring/REQUEST.md); research at [`rpi/faculty-page-authoring/research/RESEARCH.md`](../rpi/faculty-page-authoring/research/RESEARCH.md). The feature is a **Claude-native AI drafting front-end** for non-technical authors (esp. faculty) — clean page + valid 8-field frontmatter (native-page convention: omit `page_id`/`source_url`), lands via the GitHub web UI, **free path only**, **self-serve with the human CODEOWNERS gate retained** (VISION principle 4). Verdict **CONDITIONAL GO**: the drafter is feasible today and high-value, but **GATE 0 failed** — Robert's six guardrail files **and** `skill/SKILL.md` are **absent from the repo**, and the only frontmatter validator present (`export-tool`) requires `page_id`/`source_url`, the two fields the native convention omits (**schema fork to resolve**). Resolved favorably: placement works without `new_page.py` (`render.py:142` derives `department` from frontmatter-or-folder), and `llms.txt` auto-regenerates on deploy so there's **no SKILL.md page-map to sync**. **Next:** clear conditions — guardrails land or fold into scope · reconcile native/export schema · Aaron sign-off on the GitHub-PR friction floor + self-serve demand — then `/rpi:plan faculty-page-authoring`.
+1. **Push `main`** — reconcile first (the live-test page was merged via the GitHub web UI and isn't local): `git fetch origin && git pull origin main && git push origin main`.
+2. **Flip the gate on** ([`branch-protection.md`](../rpi/faculty-page-authoring/implement/branch-protection.md), task 1.7): require a PR + the required `validate` status check + restrict merge to maintainers (CODEOWNERS-required review stays **off** per [ADR-0004](decisions/0004-human-gate-via-restricted-merge-access.md)). Then run the **blocked-PR test** (1.8/3.2) — a deliberately-invalid page must fail CI and be unmergeable. This is the one piece of the v1 definition-of-done still outstanding.
+3. **Phase 0.2** — confirm the maintainer set (who holds merge rights) with Aaron.
+4. **Phase 4 fast-follows** (not v1 blockers): `visibility: public` backfill over the 29 legacy pages + the export tool; optional fix for the renderer's `> [!note]-` callout collapse (some exported mentorAI pages render degraded — found 2026-06-08).
+
+The drafter itself (`skill/drafter/`) is proven: installed on SU Claude Enterprise, it drafted a real page that passed the validator with zero edits and went live. Research framing (CONDITIONAL GO, the schema fork, GATE 0) is now historical — see [`rpi/faculty-page-authoring/`](../rpi/faculty-page-authoring/) for the full plan + implementation record.
 
 > Renderer size note: `tools/render.py` is 517 lines, but ADR-0002's amendment **retired the 300-line hard gate** — the operative constraint is "single-file, inspectable, no SSG-framework creep," which it still satisfies. No action needed.
 
@@ -56,6 +63,6 @@ Stages 1–8 of [`docs/next-session-plan.md`](next-session-plan.md) (2026-05-28)
 
 ## Open questions
 
-- **GATE 0 for the authoring feature:** Robert's contribution-guardrail files (`new_page.py`, `check_frontmatter.py`, `validate-content.yaml`, `CODEOWNERS`) are **not yet merged** — verified absent from the repo, currently only in a Downloads doc. The authoring feature depends on them landing; `/rpi:research` must verify their real state and coordinate with Robert.
+- **GATE 0 (authoring guardrails) — RESOLVED.** Rather than wait on Robert's files, we **built the gate ourselves** (`check_frontmatter.py` + `validate-content.yaml` + `CODEOWNERS` + PR template, committed 2026-06-08). The native/export schema fork was reconciled via an explicit `origin:` discriminator. What remains is settings-only (flip branch protection), not code.
 - **Has Aaron seen the live site and asked for more, or is the research memo (Stage 9) the actual deliverable?** Worth a 1:1 conversation before Stage 9 lands.
 - **What name does Aaron's team pick for the production repo?** Working name is `su-kb-site`; renames are cheap before public launch.
