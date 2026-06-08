@@ -1,6 +1,6 @@
 # Project Status — su-kb-site
 
-_Last updated: 2026-06-01 (reconciled against git)_
+_Last updated: 2026-06-04_
 
 > **Reconciliation note (2026-06-01):** the prior snapshot was written mid-pivot on 2026-05-28 and missed the **7 commits that *executed* the pivot that same evening**. This update realigns STATUS with git reality — Stages 1–8 are done and live; Stage 9 + cleanup remain.
 
@@ -25,15 +25,13 @@ _Last updated: 2026-06-01 (reconciled against git)_
 - **Confluence framing removed from the public site** (committed + live 2026-06-01) — hero/trust/footer reframed to "SU-hosted / markdown-native"; the false "auto-synced / last sync" claims are gone
 - **`render.py` date-sort bug fixed** (committed + live 2026-06-01) — `related_for()` no longer crashes on unquoted `last_modified`
 - **Public-only access gate live** ([ADR-0003](decisions/0003-public-only-access-classification.md)) — [`export-tool/src/su_kb_export/restrictions.py`](../export-tool/src/su_kb_export/restrictions.py) binary `is_public` (direct + inherited read restrictions, fails closed); puller skips restricted pages and writes a gitignored `.last-exclusions.jsonl`; leak guard in the export summary + `render.py`. Live export confirmed 3 restricted pages excluded, 29 public published. 16 classifier tests; suite 89 passed
+- **AI-retrieval surfaces hardened + `agent_site_bench` benchmark** (committed `7861382`, 2026-06-04) — expanded the generated `robots.txt` AI/search-crawler allowlist (OpenAI / Anthropic / Perplexity / Google / Apple bots) and machine-surface emission in [`tools/render.py`](../tools/render.py) + [`tools/kb_config.py`](../tools/kb_config.py); new [`tools/agent_site_bench/`](../tools/agent_site_bench/) CLI harness compares this site vs Shahaan's `su-kb-pages-demo` on machine-surface discovery + the `llms.txt`→`.md` retrieval path (no-paid `--surface-only` probe + optional OpenRouter agent-loop + judge). Findings in [`docs/AI_RETRIEVAL_OPTIMIZATION_REPORT_2026-06-03.md`](AI_RETRIEVAL_OPTIMIZATION_REPORT_2026-06-03.md). **Generated-surface-only** — no edits to `site/content/`, design, or layout
 
 ## What's next
 
 Stages 1–8 of [`docs/next-session-plan.md`](next-session-plan.md) (2026-05-28) and the public-only classifier ([ADR-0003](decisions/0003-public-only-access-classification.md), 2026-06-01) have shipped and are live. The next focus is authoring:
 
-1. **Authoring workflow — how do we add new markdown pages to the site?** This is the markdown-native authoring half of the vision; the export tool only seeds/migrates *from* Confluence. Explore:
-   - **AI-assisted page creation** — "here are some documents, help me draft a page" → a clean markdown page with valid frontmatter.
-   - Possibly package this as a **Claude skill** so it's repeatable.
-   - An **easy import path** that drops the drafted file into the correct department/ancestor folder with the right 8-field frontmatter, ready for the renderer.
+1. **Authoring workflow — RPI research done → CONDITIONAL GO.** Scoped REQUEST at [`rpi/faculty-page-authoring/REQUEST.md`](../rpi/faculty-page-authoring/REQUEST.md); research at [`rpi/faculty-page-authoring/research/RESEARCH.md`](../rpi/faculty-page-authoring/research/RESEARCH.md). The feature is a **Claude-native AI drafting front-end** for non-technical authors (esp. faculty) — clean page + valid 8-field frontmatter (native-page convention: omit `page_id`/`source_url`), lands via the GitHub web UI, **free path only**, **self-serve with the human CODEOWNERS gate retained** (VISION principle 4). Verdict **CONDITIONAL GO**: the drafter is feasible today and high-value, but **GATE 0 failed** — Robert's six guardrail files **and** `skill/SKILL.md` are **absent from the repo**, and the only frontmatter validator present (`export-tool`) requires `page_id`/`source_url`, the two fields the native convention omits (**schema fork to resolve**). Resolved favorably: placement works without `new_page.py` (`render.py:142` derives `department` from frontmatter-or-folder), and `llms.txt` auto-regenerates on deploy so there's **no SKILL.md page-map to sync**. **Next:** clear conditions — guardrails land or fold into scope · reconcile native/export schema · Aaron sign-off on the GitHub-PR friction floor + self-serve demand — then `/rpi:plan faculty-page-authoring`.
 
 > Renderer size note: `tools/render.py` is 517 lines, but ADR-0002's amendment **retired the 300-line hard gate** — the operative constraint is "single-file, inspectable, no SSG-framework creep," which it still satisfies. No action needed.
 
@@ -57,5 +55,6 @@ Stages 1–8 of [`docs/next-session-plan.md`](next-session-plan.md) (2026-05-28)
 
 ## Open questions
 
+- **GATE 0 for the authoring feature:** Robert's contribution-guardrail files (`new_page.py`, `check_frontmatter.py`, `validate-content.yaml`, `CODEOWNERS`) are **not yet merged** — verified absent from the repo, currently only in a Downloads doc. The authoring feature depends on them landing; `/rpi:research` must verify their real state and coordinate with Robert.
 - **Has Aaron seen the live site and asked for more, or is the research memo (Stage 9) the actual deliverable?** Worth a 1:1 conversation before Stage 9 lands.
 - **What name does Aaron's team pick for the production repo?** Working name is `su-kb-site`; renames are cheap before public launch.
