@@ -1,0 +1,48 @@
+name: Validate content frontmatter
+
+# The publish gate (machine half). Runs tools/check_frontmatter.py on the
+# content markdown a PR changes and FAILS CLOSED if any page is malformed or
+# unsafe (missing visibility, a native page carrying Confluence fields, bad
+# date/slug, unknown department, etc.). See rpi/faculty-page-authoring eng.md §4.
+#
+# Independent of deploy.yaml: different trigger (PR vs push), read-only
+# permissions, no shared steps. Validation gates the PR; deploy publishes the
+# merged result. deploy.yaml is unchanged.
+#
+# This check only becomes a true gate once branch protection on `main` marks it
+# REQUIRED (a one-time repo setting — see rpi/faculty-page-authoring/implement/
+# branch-protection.md).
+
+on:
+  pull_request:
+    paths:
+      - "site/content/**/*.md"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # need the merge base to diff the PR
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validator dependency
+        run: pip install pyyaml
+
+      - name: List changed content files
+        id: changed
+        run: |
+          git diff --name-only --diff-filter=d \
+            "origin/${{ github.base_ref }}...HEAD" -- 'site/content/**/*.md' > changed.txt
+          echo "Changed content files:"
+          cat changed.txt
+
+      - name: Validate changed frontmatter
+        run: python tools/check_frontmatter.py --changed-only changed.txt

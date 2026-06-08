@@ -1,0 +1,19 @@
+# CODEOWNERS — the publish gate (human half).
+#
+# Any change to published content requires publish-safety review before merge.
+# CODEOWNERS only REQUESTS review by default; it becomes a hard gate once branch
+# protection on `main` enables "Require review from Code Owners" (a one-time repo
+# setting — see rpi/faculty-page-authoring/implement/branch-protection.md).
+#
+# Reviewer handle below is the initial technical steward (repo owner). Phase 0.2
+# of the plan confirms with Aaron whether an SU/ITS handle or team should own it.
+
+# Published content — the public-safety review point (VISION P4).
+/site/content/**                    @julianhernandez2155
+
+# The governance tooling itself is owned too, so a PR can't quietly disable the
+# validator, the CI gate, the reviewer routing, or the PR checklist.
+/tools/check_frontmatter.py         @julianhernandez2155
+/.github/workflows/                 @julianhernandez2155
+/CODEOWNERS                         @julianhernandez2155
+/.github/pull_request_template.md   @julianhernandez2155
