@@ -1,14 +1,43 @@
 # skill/ context
 
-The Claude skill that students and staff install to route Claude's `WebFetch` tool at this site when they ask SU AI questions.
+Claude skills that live with this site. There are **two distinct skills, each in its own
+subfolder** (an Agent Skill is a directory whose `SKILL.md` is its entry point, so two skills
+can't share one folder):
+
+| Subfolder | Skill | Direction | Status |
+|---|---|---|---|
+| `drafter/` | **su-kb-page-drafter** — interviews an author and emits a finished, schema-valid page + path + terminal-free GitHub steps | **write** (authoring into the KB) | built (faculty-page-authoring Phase 2) |
+| _(retrieval)_ | the **WebFetch routing** skill students install so Claude answers SU AI questions from this site | **read** (retrieving from the KB) | described below; not yet built |
+
+> Naming note: this folder's identity was originally reserved for the *retrieval* skill (see
+> the project README / CLAUDE.md, which call `skill/` "the skill students install to route
+> WebFetch"). The drafter is a second, write-side skill added later; rather than collide on a
+> single `skill/SKILL.md`, each skill gets a subfolder. When the retrieval skill is built it
+> should land at `skill/retrieval/SKILL.md`.
 
 ## Audience
 
 A skill-author or Claude-skill maintainer.
 
-## Workspace structure
+## The drafter skill (`drafter/`)
 
-- `SKILL.md` — the skill manifest (description, trigger phrases, routing instructions)
+- `drafter/SKILL.md` — the Agent Skill (manifest frontmatter + the full drafting instructions).
+- `drafter/drafter-prompt.md` — the **identical** instruction body as a no-install copy-paste
+  prompt (the guaranteed-reachable fallback if Agent Skills can't be installed in the author's
+  Claude workspace).
+- **Single source of truth, two delivery vehicles:** the two files mirror each other and both
+  mirror the schema rules in [`tools/check_frontmatter.py`](../tools/check_frontmatter.py) (the
+  authoritative publish gate). Change one, change all three. Spec:
+  [`rpi/faculty-page-authoring/plan/eng.md` §6](../rpi/faculty-page-authoring/plan/eng.md).
+
+## The retrieval skill (read side — not yet built)
+
+The Claude skill that students and staff install to route Claude's `WebFetch` tool at this site
+when they ask SU AI questions.
+
+### Workspace structure (when built)
+
+- `retrieval/SKILL.md` — the skill manifest (description, trigger phrases, routing instructions)
 
 ## Routing logic (the skill's job)
 
