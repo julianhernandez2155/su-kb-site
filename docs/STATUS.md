@@ -39,6 +39,7 @@ Stages 1–8 of [`docs/next-session-plan.md`](next-session-plan.md) (2026-05-28)
 
 - [ADR-0002](decisions/0002-pivot-from-quartz-to-thin-renderer.md) — Pivot from Quartz to a thin Python renderer (supersedes [ADR-0001](decisions/0001-quartz-v4-as-ssg.md))
 - [ADR-0003](decisions/0003-public-only-access-classification.md) — Public-only publication via export-time access classification
+- [ADR-0004](decisions/0004-human-gate-via-restricted-merge-access.md) — Human publish-gate via restricted merge access, not CODEOWNERS-required review
 
 ## Recent pivots
 
