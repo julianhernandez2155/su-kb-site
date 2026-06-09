@@ -14,7 +14,9 @@ _Last updated: 2026-06-08_
 
 **Update (2026-06-08):** the **authoring workflow shipped.** `faculty-page-authoring` is built and committed across RPI Phases 1–3, and **validated live on SU Claude Enterprise** — a real page drafted by the skill (with no hand-editing) is live on GitHub Pages and passes the validator. The publish gate (`check_frontmatter.py` + CI + the restricted-merge model, [ADR-0004](decisions/0004-human-gate-via-restricted-merge-access.md)) is committed but **not yet enforcing**: it goes live only when branch protection is flipped on the pushed repo.
 
-**Next:** Push `main`, then flip branch protection (require PR + required `validate` check + restrict merge) and run the blocked-PR test — the live fail-closed proof. (See "What's next.")
+**Update (2026-06-09): v1 fail-closed gate is LIVE and proven.** `main` was reconciled (merged the web-UI Hermes page, PR #1) and pushed; branch protection now enforces **require-a-PR + required `validate` check** with `enforce_admins: true`. The **blocked-PR test passed**: a deliberately-invalid native page (missing `visibility`) made `validate` fail and GitHub reported the merge **BLOCKED** (PR #2 — closed unmerged, branch deleted). The one deferred piece is **rule #3 — restrict _who_ can merge** (`restrictions: null` for now), pending the maintainer set confirmed with Aaron (Phase 0.2).
+
+**Next:** Confirm the KB maintainer set with Aaron, then add the merge restriction (rule #3). Then Phase-4 fast-follows (not v1 blockers). (See "What's next.")
 
 ## What's working
 
@@ -31,11 +33,11 @@ _Last updated: 2026-06-08_
 
 ## What's next
 
-Stages 1–8 of [`docs/next-session-plan.md`](next-session-plan.md) (2026-05-28) and the public-only classifier ([ADR-0003](decisions/0003-public-only-access-classification.md), 2026-06-01) shipped and are live. The **authoring workflow** (`faculty-page-authoring`) is now built, committed (5 commits, 2026-06-08), and live-validated; the remaining work is GitHub-side gate activation:
+Stages 1–8 of [`docs/next-session-plan.md`](next-session-plan.md) (2026-05-28) and the public-only classifier ([ADR-0003](decisions/0003-public-only-access-classification.md), 2026-06-01) shipped and are live. The **authoring workflow** (`faculty-page-authoring`) is built, committed, live-validated — and as of **2026-06-09 the fail-closed publish gate is enforcing and proven** (push + branch protection + blocked-PR test all done). Remaining:
 
-1. **Push `main`** — reconcile first (the live-test page was merged via the GitHub web UI and isn't local): `git fetch origin && git pull origin main && git push origin main`.
-2. **Flip the gate on** ([`branch-protection.md`](../rpi/faculty-page-authoring/implement/branch-protection.md), task 1.7): require a PR + the required `validate` status check + restrict merge to maintainers (CODEOWNERS-required review stays **off** per [ADR-0004](decisions/0004-human-gate-via-restricted-merge-access.md)). Then run the **blocked-PR test** (1.8/3.2) — a deliberately-invalid page must fail CI and be unmergeable. This is the one piece of the v1 definition-of-done still outstanding.
-3. **Phase 0.2** — confirm the maintainer set (who holds merge rights) with Aaron.
+1. ✅ **Push `main`** — done 2026-06-09 (merge-reconciled the web-UI Hermes page, PR #1, first; 11 commits pushed).
+2. ✅ **Flip the gate on** ([`branch-protection.md`](../rpi/faculty-page-authoring/implement/branch-protection.md), task 1.7): require-a-PR + required `validate` check are live (`enforce_admins: true`; CODEOWNERS-required review stays **off** per [ADR-0004](decisions/0004-human-gate-via-restricted-merge-access.md)). **Blocked-PR test (1.8) passed** — PR #2 (invalid page, missing `visibility`) → `validate` failed → merge **BLOCKED**, closed unmerged. The v1 definition-of-done is met.
+3. **Restrict-merge (rule #3) + Phase 0.2** — confirm the maintainer set (who holds merge rights) with Aaron, then set `restrictions` to limit merge to maintainers. Deferred so we don't guess the set; the machine gate is already fail-closed without it.
 4. **Phase 4 fast-follows** (not v1 blockers): `visibility: public` backfill over the 29 legacy pages + the export tool; optional fix for the renderer's `> [!note]-` callout collapse (some exported mentorAI pages render degraded — found 2026-06-08).
 
 The drafter itself (`skill/drafter/`) is proven: installed on SU Claude Enterprise, it drafted a real page that passed the validator with zero edits and went live. Research framing (CONDITIONAL GO, the schema fork, GATE 0) is now historical — see [`rpi/faculty-page-authoring/`](../rpi/faculty-page-authoring/) for the full plan + implementation record.
