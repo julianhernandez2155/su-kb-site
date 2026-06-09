@@ -13,10 +13,14 @@ name: Validate content frontmatter
 # REQUIRED (a one-time repo setting — see rpi/faculty-page-authoring/implement/
 # branch-protection.md).
 
+# Runs on EVERY PR (no path filter) so `validate` always reports a check —
+# required-status-check branch protection needs the check to exist on every PR,
+# or docs/tooling-only PRs would hang forever on a check that never runs. The
+# validator itself only inspects changed site/content/**.md files and exits 0
+# ("nothing to validate") when a PR touches no content, so non-content PRs pass
+# trivially. See rpi/faculty-page-authoring/implement/branch-protection.md.
 on:
   pull_request:
-    paths:
-      - "site/content/**/*.md"
 
 permissions:
   contents: read
